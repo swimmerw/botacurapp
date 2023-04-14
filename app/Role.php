@@ -1,8 +1,11 @@
 <?php
 
 namespace App;
-
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use RealRashid\SweetAlert\Facades\Alert;
+
+
 
 class Role extends Model
 {
@@ -23,6 +26,24 @@ class Role extends Model
     }
 
     // ALMACENAMIENTO 
+    public function store($request)
+    {
+        $slug = Str::slug($request->name, '-');
+        Alert::success('Éxito', 'Rol guardado')->showConfirmButton();
+        return self::create($request->all() + [
+            'slug' => $slug,
+        ]);
+    }
+
+    public function my_update($request)
+    {
+        $slug = Str::slug($request->name, '-');
+        Alert::success('Éxito', 'Rol actualizado')->showConfirmButton();
+        return self::update($request->all() + [
+            'slug' => $slug,
+        ]);
+        
+    }
 
 
     // VALIDACION 
