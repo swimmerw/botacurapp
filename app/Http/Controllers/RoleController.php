@@ -10,6 +10,11 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class RoleController extends Controller
 {
+
+    public function __construct()
+    {
+	    $this->middleware('role:' . config('app.admin_role'));
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +22,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-      
+        $this->authorize('index',Role::class);
         return view('themes.backoffice.pages.role.index', [
             'roles' => Role::all(),
         ]);
@@ -30,6 +35,7 @@ class RoleController extends Controller
      */
     public function create()
     {
+        $this->authorize('create',Role::class);
         return view('themes.backoffice.pages.role.create');
     }
 
@@ -53,9 +59,10 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        return view('themes.backoffice.pages.role.show',[
-            'role'=> $role,
-            'permissions' =>$role->permissions
+        $this->authorize('view',$role);
+        return view('theme.backoffice.pages.role.show', [
+            'role' => $role,
+            'permissions' => $role->permissions
         ]);
     }
 
@@ -67,6 +74,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        $this->authorize('update', $role);
         return view('themes.backoffice.pages.role.edit',[
             'role'=> $role,
         ]);
@@ -93,6 +101,7 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        $this->authorize('delete', $role);
         $role->delete();
         Alert::success('Éxito', 'Rol eliminado')->showConfirmButton();
         return redirect()->route('backoffice.role.index');

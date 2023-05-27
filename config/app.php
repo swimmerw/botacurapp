@@ -3,8 +3,16 @@
 return [
 
 
-    'admin_role' => env('ADMIN_ROLE', 'admin'),
+    'admin_role' => env('ADMIN_ROLE', 'administrador'),
     'visit_role' => env('VISIT_ROLE', 'visitante'),
+    'anfitriona_role'=>env('ANFITRIONA_ROLE', 'anfitriona'),
+    'barman_role'=>env('BARMAN_ROLE', 'barman'),
+    'cajera_role'=>env('CAJERA_ROLE','cajera'),
+    'cocinera_role'=>env('COCINERA_ROLE','cocinera'),
+    'masoterapeuta_role'=>env('MASO_ROLE', 'masoterapeuta'),
+    'compra_role'=>env('COMPRA_ROLE','comprador'),
+    'mantecion_role'=>env('MANTENCION_ROLE','mantencion'),
+    'administracion_role'=>env('ADMINISTRACION_ROLE','administracion'),
     /*
     |--------------------------------------------------------------------------
     | Application Name

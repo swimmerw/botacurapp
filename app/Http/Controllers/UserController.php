@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Role;
+use App\Http\Requests\User\StoreRequest;
+use App\Http\Requests\User\UpdateRequest;
 
 class UserController extends Controller
 {
@@ -15,9 +17,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        
+        $this->authorize('index', User::class);
         return view('themes.backoffice.pages.user.index',[
-            'users' => User::all(),
+            'users' => auth()->user()->visible_users(),
             //'roles' => Role::all(),
         ]);
     } 
@@ -29,7 +31,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('themes.backoffice.pages.user.create');
+        $this->authorize('create', User::class);
+        return view('themes.backoffice.pages.user.create',[
+            'roles'=> Role::all(),
+        ]);
     }
 
     /**
@@ -38,9 +43,12 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request, User $user)
     {
-        //
+        $user = $user->store($request);
+        return redirect()->route('backoffice.user.show', $user);
+        
+
     }
 
     /**
@@ -51,6 +59,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $this->authorize('view', User::class);
         return view('themes.backoffice.pages.user.show',[
             'user' => $user,
         ]);
@@ -62,9 +71,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        $this->authorize('update', User::class);
+        return view('themes.backoffice.pages.user.edit',[
+            'user'=> $user,
+        ]);
     }
 
     /**
@@ -74,9 +86,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, User $user)
     {
-        //
+        $user->my_update($request);
+        return redirect()->route('backoffice.user.show', $user);       
     }
 
     /**
@@ -85,9 +98,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $this->authorize('delete', User::class);
+        $user->delete();
+        alert('Éxito', 'Usuario Eliminado', 'success')->showConfirmButton();
+        return redirect()->route('backoffice.user.index');
     }
 
 
@@ -99,7 +115,7 @@ class UserController extends Controller
     public function assign_role(User $user)
     {
         //dd($request);
-        //$this->authorize('assign_role', $user);
+        $this->authorize('assign_role', $user);
         return view('themes.backoffice.pages.user.assign_role',[
             'user' => $user,
             'roles' => Role::all(),
@@ -112,7 +128,7 @@ class UserController extends Controller
      */
     public function role_assignment(Request $request, User $user)
     {
-        //$this->authorize('assign_role', $user);
+        $this->authorize('assign_role', $user);
         $user->role_assignment($request);
         $user->roles()->sync($request->roles);
         $user->verify_permission_integrity();
@@ -127,7 +143,7 @@ class UserController extends Controller
      */
     public function assign_permission(User $user)
     {
-        //$this->authorize('assign_permission', $user);
+        $this->authorize('assign_permission', $user);
         return view('themes.backoffice.pages.user.assign_permission',[
             'user' => $user,
             'roles' => $user->roles
@@ -140,7 +156,7 @@ class UserController extends Controller
      */
     public function permission_assignment(Request $request, User $user)
     {
-        //$this->authorize('assign_permission', $user);
+        $this->authorize('assign_permission', $user);
         $user->permissions()->sync($request->permissions);
         alert('Éxito', 'Permisos asignados', 'success');
         return redirect()->route('backoffice.user.show', $user);

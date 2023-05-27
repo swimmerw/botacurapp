@@ -15,9 +15,17 @@ class PermissionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function __construct()
+     {
+         $this->middleware('role:' . config('app.admin_role'));
+     }
+
+
     public function index()
     {
         {
+            $this->authorize('index',Role::class);
              return view('themes.backoffice.pages.permission.index',[
                 'permissions' => Permission::all()
             ]);
@@ -32,6 +40,7 @@ class PermissionController extends Controller
     public function create()
     {
         {
+            $this->authorize('create',Role::class);
              return view('themes.backoffice.pages.permission.create',[
                 'roles' => Role::all()
             ]);
@@ -58,6 +67,7 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
+        $this->authorize('view',$permission);
         return view('themes.backoffice.pages.permission.show',[
             'permission'=> $permission,
         ]);
@@ -71,6 +81,7 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
+        $this->authorize('update',$permission);
         return view('themes.backoffice.pages.permission.edit', [
             'permission' => $permission,
             'roles' => Role::all()
@@ -98,7 +109,7 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        
+        $this->authorize('delete',$permission);
         $role = $permission->role;
         $permission->delete();
         alert('Éxito', 'Permiso eliminado', 'success')->showConfirmButton();

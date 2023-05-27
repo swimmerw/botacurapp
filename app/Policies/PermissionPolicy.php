@@ -16,6 +16,13 @@ class PermissionPolicy
      * @param  \App\User  $user
      * @return mixed
      */
+
+
+    public function index(User $user)
+    {
+        return $user->has_permission('index-permission');
+    }
+
     public function viewAny(User $user)
     {
         //
@@ -30,8 +37,9 @@ class PermissionPolicy
      */
     public function view(User $user, Permission $permission)
     {
-        //
+        return $user->has_permission('view-permission');
     }
+    
 
     /**
      * Determine whether the user can create permissions.
@@ -41,7 +49,8 @@ class PermissionPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->has_permission('create-permission');
+    
     }
 
     /**
@@ -53,7 +62,8 @@ class PermissionPolicy
      */
     public function update(User $user, Permission $permission)
     {
-        //
+        return $user->has_permission('update-permission');
+    
     }
 
     /**
@@ -65,7 +75,8 @@ class PermissionPolicy
      */
     public function delete(User $user, Permission $permission)
     {
-        //
+        return $user->has_permission('delete-permission');
+    
     }
 
     /**

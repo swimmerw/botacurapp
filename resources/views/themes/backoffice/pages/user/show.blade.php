@@ -22,31 +22,32 @@
             <div class="row">
                 <div class="col s12 m8">
                     <div class="card">
-                        <div class="card-content">
-                            <span class="card-title">{{$user->name}}</span>
-                            <h4>Roles: </h4>
-                            <ul>
-                                @foreach($user->roles as $role)
-                                <li>{{$role->name}}</li>
-                                @endforeach
-                            </ul>
+                            <div class="card-content">
+                                <span class="card-title">{{$user->name}}</span>
+                                <p><strong>Edad: </strong>{{$user->age()}}</p>
+                                <h4>Roles: </h4>
+                                <ul>
+                                    @foreach($user->roles as $role)
+                                    <li>{{$role->name}}</li>
+                                    @endforeach
+                                </ul>
                             </div>
-                        <div class="card-action">
-                            <a href="{{route('backoffice.user.edit', $user) }}">Editar</a>
-                            <a href="#" style="color: red" onclick="enviar_formulario()">Eliminar</a>
-                        </div>
+                                <div class="card-action">
+                                    <a href="{{route('backoffice.user.edit', $user) }}">Editar</a>
+                                    <a href="#" style="color: red" onclick="enviar_formulario()">Eliminar</a>
+                                </div>
                     </div>
                 </div>
 
             
-                <div class="col s12 m4">
-                   @include('themes.backoffice.pages.user.includes.user_nav')
-                </div>
+                        <div class="col s12 m4">
+                        @include('themes.backoffice.pages.user.includes.user_nav')
+                        </div>
 
-
-
-
+        </div>
+        </div>
     </div>
+</div>
 
 <form method="post" action="{{route('backoffice.user.destroy', $user) }} " name="delete_form">
 {{csrf_field()}}

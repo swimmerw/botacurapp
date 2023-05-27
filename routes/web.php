@@ -12,6 +12,11 @@
 */
 
 
+
+Route::get('test', function(){
+    return 'hola';
+})->middleware('role:paciente');
+
 Route::get('/', function() {
     return view('welcome');
 });
@@ -30,9 +35,8 @@ Auth::routes(['verify'=> true]);
 Route::group(['middleware'=>['auth'], 'as' =>'backoffice.'], function(){
     // Route::get('role', 'RoleController@index')->name('role.index');
     Route::get('admin','AdminController@show')->name('admin.show');
+    
     Route::resource('user', 'UserController');
-    
-    
     Route::get('user/{user}/assign_role','UserController@assign_role')->name('user.assign_role');
     Route::post('user/{user}/role_assignment', 'UserController@role_assignment')->name('user.role_assignment');
 
