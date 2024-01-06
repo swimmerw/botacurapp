@@ -60,7 +60,7 @@ class RoleController extends Controller
     public function show(Role $role)
     {
         $this->authorize('view',$role);
-        return view('theme.backoffice.pages.role.show', [
+        return view('themes.backoffice.pages.role.show', [
             'role' => $role,
             'permissions' => $role->permissions
         ]);

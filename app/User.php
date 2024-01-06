@@ -55,6 +55,11 @@ class User extends Authenticatable implements MustVerifyEmail
         
     }
 
+    public function reservaciones()
+    {
+        return $this->hasMany('App\Reserva');
+    }
+
 
 
 //ALMACENAMIENTO

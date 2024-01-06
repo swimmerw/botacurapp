@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Programa;
+use App\Http\Requests\Programa\StoreRequest; 
+use App\Http\Requests\Programa\UpdateRequest; 
 use Illuminate\Http\Request;
 
 class ProgramaController extends Controller
@@ -14,7 +16,9 @@ class ProgramaController extends Controller
      */
     public function index()
     {
-        //
+        return view('themes.backoffice.pages.programa.index', [
+            'programa' => Programa::all(),
+        ]);
     }
 
     /**
@@ -24,7 +28,7 @@ class ProgramaController extends Controller
      */
     public function create()
     {
-        //
+        return view('themes.backoffice.pages.programa.create');
     }
 
     /**
@@ -33,20 +37,23 @@ class ProgramaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request, Programa $programa)
     {
-        //
+        $programa = $programa->store($request);
+        return 'Se ha almacenado el programa';
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Programa  $programa
+     * @param  \App\Programa  $programas
      * @return \Illuminate\Http\Response
      */
     public function show(Programa $programa)
     {
-        //
+        return view('themes.backoffice.pages.programa.show', [
+            'programa' => $programa,
+        ]);
     }
 
     /**
@@ -57,7 +64,10 @@ class ProgramaController extends Controller
      */
     public function edit(Programa $programa)
     {
-        //
+        $this->authorize('update', $programa);
+        return view('themes.backoffice.pages.programa.edit',[
+            'programa'=> $programa,
+        ]);
     }
 
     /**
@@ -67,9 +77,10 @@ class ProgramaController extends Controller
      * @param  \App\Programa  $programa
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Programa $programa)
+    public function update(UpdateRequest $request, Programa $programa)
     {
-        //
+        $programa->my_update($request);
+        return redirect()->route('backoffice.programa.show', $programa);
     }
 
     /**

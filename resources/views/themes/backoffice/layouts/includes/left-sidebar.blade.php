@@ -56,6 +56,16 @@
                 </li>
 
                 <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.programa.index') }}">
+                        <i class="material-icons">
+                            check_circle
+                        </i>
+                        <span class="nav-text">
+                            Programas
+                        </span>
+                    </a>
+                </li>
+                <li class="bold">
                     <a class="waves-effect waves-cyan" href="{{ route ('backoffice.user.index') }}">
                         <i class="material-icons">
                             people

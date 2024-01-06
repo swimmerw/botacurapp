@@ -14,6 +14,7 @@ class DropPermissionsSlugUnique extends Migration
     public function up()
     {
         Schema::table('permissions', function (Blueprint $table) {
+            
             $table->dropUnique('permissions_slug_unique');
         });
     }
