@@ -35,10 +35,10 @@
                         </li>
                     </ul>
                     <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" data-activates="profile-dropdown-nav" href="#">
-                        Sebastián
+                        {{Auth::user()->name}}
                         <i class="mdi-navigation-arrow-drop-down right"></i>
                     </a>
-                    <p class="user-roal">Administrador</p>
+                    <p class="user-roal">{{Auth::user()->list_roles()}}</p>
                 </div>
             </div>
         </li>

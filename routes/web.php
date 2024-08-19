@@ -34,7 +34,8 @@ Auth::routes(['verify'=> true]);
 
 Route::group(['middleware'=>['auth'], 'as' =>'backoffice.'], function(){
     // Route::get('role', 'RoleController@index')->name('role.index');
-    Route::get('admin','AdminController@show')->name('admin.show');
+    // Route::get('home','AdminController@show')->name('admin.show');
+    Route::get('home','AdminController@show')->name('admin.show');
     
     Route::resource('user', 'UserController');
     Route::get('user/{user}/assign_role','UserController@assign_role')->name('user.assign_role');
