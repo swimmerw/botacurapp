@@ -21,6 +21,10 @@ class Reserva extends Model
         {
             return $this->belongsToMany('App\Programa');
         }
+
+        public function cliente() {
+            return $this->belongsTo('App\Cliente');
+        }
   
 
 //ALMACENAMIENTO

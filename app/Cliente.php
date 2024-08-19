@@ -14,7 +14,7 @@ class Cliente extends Model
 
 
 //RELACIONES
-public function reservaciones()
+public function reservas()
 {
     return $this->hasMany('App\Reserva');
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Cliente;
+use App\Http\Requests\Cliente\StoreRequest;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
@@ -14,7 +15,9 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        //
+        return view('themes.backoffice.pages.cliente.index', [
+            'clientes' => Cliente::all(),
+        ]);
     }
 
     /**
@@ -24,7 +27,7 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        //
+        return view('themes.backoffice.pages.cliente.create');
     }
 
     /**
@@ -33,9 +36,11 @@ class ClienteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request, Cliente $cliente)
     {
-        //
+        
+        $cliente = $cliente->store($request);
+        return redirect()->route('backoffice.cliente.show', $cliente);
     }
 
     /**

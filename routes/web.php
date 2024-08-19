@@ -49,6 +49,7 @@ Route::group(['middleware'=>['auth'], 'as' =>'backoffice.'], function(){
     Route::resource('permission', 'PermissionController');
     Route::resource('programa','ProgramaController');
     Route::resource('servicio', 'ServicioController');
+    Route::resource('cliente', 'ClienteController');
 });
 
 

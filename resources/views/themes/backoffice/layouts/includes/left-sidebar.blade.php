@@ -56,6 +56,16 @@
                 </li>
 
                 <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.cliente.index') }}">
+                        <i class="material-icons">
+                            airport_shuttle
+                        </i>
+                        <span class="nav-text">
+                            Clientes
+                        </span>
+                    </a>
+                </li>
+                <li class="bold">
                     <a class="waves-effect waves-cyan" href="{{ route ('backoffice.programa.index') }}">
                         <i class="material-icons">
                             check_circle
