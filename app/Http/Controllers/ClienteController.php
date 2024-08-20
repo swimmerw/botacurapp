@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\Http\Requests\Cliente\StoreRequest;
+use App\Http\Requests\Cliente\UpdateRequest;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
@@ -27,6 +28,7 @@ class ClienteController extends Controller
      */
     public function create()
     {
+        $this->authorize('create',Cliente::class);
         return view('themes.backoffice.pages.cliente.create');
     }
 
@@ -51,7 +53,9 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-        //
+        return view('themes.backoffice.pages.cliente.show', [
+            'cliente'=>$cliente
+        ]);
     }
 
     /**
@@ -62,7 +66,10 @@ class ClienteController extends Controller
      */
     public function edit(Cliente $cliente)
     {
-        //
+        $this->authorize('update', $cliente);
+        return view('themes.backoffice.pages.cliente.edit', [
+            'cliente'=>$cliente
+        ]);
     }
 
     /**
@@ -72,9 +79,10 @@ class ClienteController extends Controller
      * @param  \App\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cliente $cliente)
+    public function update(UpdateRequest $request, Cliente $cliente)
     {
-        //
+        $cliente->my_update($request);
+        return redirect()->route('backoffice.cliente.show', $cliente);
     }
 
     /**

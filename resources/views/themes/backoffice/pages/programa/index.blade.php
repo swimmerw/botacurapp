@@ -10,6 +10,7 @@
 
 
 @section('dropdown_settings')
+<li><a href="{{route ('backoffice.programa.create') }}" class="grey-text text-darken-2">Crear Programa</a></li> 
 @endsection
 
 @section('content')

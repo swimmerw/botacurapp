@@ -1,13 +1,13 @@
 @extends('themes.backoffice.layouts.admin')
 
-@section('tittle','Dar de alta un nuevo usuario')
+@section('tittle','Dar de alta un nuevo Cliente')
 
 @section('head')
 @endsection
 
 @section('breadcrumbs')
-<li><a href="{{route('backoffice.user.index') }}">Nuestros Clientes</a></li>
-<li>Crear Usuario</li>
+<li><a href="{{route('backoffice.cliente.index') }}">Nuestros Clientes</a></li>
+<li>Crear Cliente</li>
 @endsection
 
 
@@ -23,45 +23,30 @@
                     <div class="card-panel">
                       <h4 class="header2">Crear Cliente</h4>
                       <div class="row">
-                        <form class="col s12" method="post" action="{{route('backoffice.user.store')}}">
+                        <form class="col s12" method="post" action="{{route('backoffice.cliente.store')}}">
 
 
                         {{csrf_field() }}
-                        <div class="row">
-                                <div class="input-field col s12">
-
-                                    
-
-                                </div>
-                            </div>     
+ 
                             
 
                             <div class="row">
                                 <div class="input-field col s12 m6">
-                                <input id="nombre_cliente" type="text" class="form-control @error('nombre_cliente') is-invalid @enderror" name="nombre_cliente" value="{{ old('nombre_cliente') }}" required autocomplete="nombre_cliente" autofocus>
+                                <input id="nombre_cliente" type="text" class="form-control @error('nombre_cliente') is-invalid @enderror" name="nombre_cliente" value="{{ old('nombre_cliente') }}" required autocomplete="name" autofocus>
                                     <label for="nombre_cliente">Nombre del cliente</label>
 
-                                    @if($errors->has('nombre_cliente'))
-                                        <!-- <div class="alert alert-danger">{{$messages ?? ''}}</div> -->
-
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong style="color: red">{{ $errors->first('nombre_cliente') }}</strong>
-                                        </span>
-
-                                    @endif
-
-                                    @error('nombre_cliente')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong style="color:red">{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                @error('nombre_cliente')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong style="color:red">{{ $message }}</strong>
+                                </span>
+                            @enderror
 
                                     
 
                                 </div>
 
                                 <div class="input-field col s12 m6">
-                                  <input id="correo" type="email" name="correo">
+                                  <input id="correo" type="email" name="correo" value="{{ old('correo') }}">
                                   <label for="correo">Correo electrónico</label>
                                     @error('correo')
                                           <span class="invalid-feedback" role="alert">
@@ -75,7 +60,7 @@
                          
                           <div class="row">
                             <div class="input-field col s12 m6">
-                              <input id="whatsapp_cliente" type="text" name="whatsapp_cliente" class="form-control @error('nombre_cliente') is-invalid @enderror">
+                              <input id="whatsapp_cliente" type="text" name="whatsapp_cliente" class="form-control @error('nombre_cliente') is-invalid @enderror" value="{{ old('whatsapp_cliente') }}">
                               <label for="whatsapp_cliente">Whatsapp Cliente</label>
                                 @error('whatsapp_cliente')
                                       <span class="invalid-feedback" role="alert">
@@ -85,7 +70,7 @@
                             </div>
 
                             <div class="input-field col s12 m6">
-                              <input id="instagram_cliente" type="text" name="instagram_cliente" class="form-control @error('nombre_cliente') is-invalid @enderror">
+                              <input id="instagram_cliente" type="text" name="instagram_cliente" class="form-control @error('nombre_cliente') is-invalid @enderror" {{ old('instagram_cliente') }}>
                               <label for="instagram_cliente">Instagram Cliente</label>
                                 @error('instagram_cliente')
                                       <span class="invalid-feedback" role="alert">
@@ -100,13 +85,18 @@
 
                           <div class="row">
                             <div class="input-field col s12 m6">
-                              <select>
+                              <select id="sexo" name="sexo">
                                 <option value="" disabled selected>-- Seleccione --</option>
-                                <option value="Masculino">Masculino</option>
-                                <option value="Femenino">Femenino</option>
-                                <option value="na">Prefiero no responder</option>
+                                <option value="Masculino" {{ old('sexo') == 'Masculino' ? 'selected' : '' }}>Masculino</option>
+                                <option value="Femenino" {{ old('sexo') == 'Femenino' ? 'selected' : '' }}>Femenino</option>
+                                <option value="na" {{ old('sexo') == 'na' ? 'selected' : '' }}>Prefiero no responder</option>
                               </select>
                               <label>Género</label>
+                              @error('sexo')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong style="color:red">{{ $message }}</strong>
+                              </span>
+                          @enderror
                             </div>
                           </div>
                          

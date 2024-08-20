@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Cliente;
 
+use App\Cliente;
 use Illuminate\Foundation\Http\FormRequest;
 
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,8 @@ class StoreRequest extends FormRequest
     public function authorize()
     {
         return true;
+        // return $this->user()->can('create', Cliente::class);
+
     }
 
     /**
@@ -27,14 +30,14 @@ class StoreRequest extends FormRequest
     {
         return [
             'nombre_cliente'=>['required', 'string', 'max:255'],
-            'whatsapp_cliente'=>['max:12','string'],
-            'instagram_cliente'=>['max:255', 'string'],
+            'whatsapp_cliente'=>['max:12','string', 'nullable'],
+            'instagram_cliente'=>['max:255', 'string','nullable'],
             'sexo'=>['in:Masculino,Femenino,na'],
             'correo'=>['required', 'string', 'email', 'max:255', 'unique:clientes']
         ];
     }
 
-    public function message()
+    public function messages()
     {
         return [
             'nombre_cliente.required' => 'El campo nombre es requerido',
@@ -42,7 +45,10 @@ class StoreRequest extends FormRequest
             'correo.string'=>'El valor no es correcto',
             'correo.max'=>'Excede el limite de 255 caracteres',
             'correo.unique'=>'Este email ya esta registrado',
-            'whatsapp_cliente'=>'Excede el máximo de 12 caracteres'
+            'whatsapp_cliente.max'=>'Excede el máximo de 12 caracteres',
+            'whatsapp_cliente.string'=>'La informacion puede ser alfanumerica',
+            'instagram_cliente.string'=>'La informacion puede ser alfanumerica',
+            'sexo.in'=>'Debe seleccionar una opcion'
 
         ];
     }

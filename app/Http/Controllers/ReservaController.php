@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Reserva;
+use App\Cliente;
+use App\Http\Requests\Reserva\StoreRequest;
+use App\Http\Requests\Reserva\UpdateRequest;
 use Illuminate\Http\Request;
 
 class ReservaController extends Controller
@@ -22,9 +25,13 @@ class ReservaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($cliente_id)
     {
-        //
+        $cliente = Cliente::findOrFail($cliente_id);
+
+        return view('themes.backoffice.pages.reserva.create', [
+            'cliente'=>$cliente
+        ]);
     }
 
     /**
@@ -33,9 +40,10 @@ class ReservaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request, Reserva $reserva)
     {
-        //
+        $reserva = $reserva->store($request);
+        return redirect()->route('backoffice.reserva.show', $reserva);
     }
 
     /**

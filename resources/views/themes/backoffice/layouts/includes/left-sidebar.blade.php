@@ -3,7 +3,7 @@
         <li class="user-details cyan darken-2">
             <div class="row">
                 <div class="col col s4 m4 l4">
-                    <img alt="" class="circle responsive-img valign profile-image cyan" src="images/avatar/avatar-7.png">
+                    <img alt="" class="circle responsive-img valign profile-image cyan" src="/images/avatar/avatar-7.png">
                     </img>
                 </div>
                 <div class="col col s8 m8 l8">
