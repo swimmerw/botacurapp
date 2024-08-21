@@ -11,8 +11,8 @@
 @endsection
 
 @section('dropdown_settings')
-{{-- <li><a href="{{route('backoffice.cliente.edit',$cliente)}}" class="grey-text text-darken-2">Editar Cliente</a></li>
---}}
+<li><a href="{{ route('backoffice.reserva.create',$cliente->id) }}" class="grey-text text-darken-2">Crear Reserva</a>
+</li>
 @endsection
 
 @section('content')
@@ -29,13 +29,37 @@
 
                         <span class="card-title activator grey-text text-darken-4">{{$cliente->nombre_cliente}}</span>
                         <p>
-                            <i class="material-icons">perm_phone_msg</i> {{$cliente->whatsapp_cliente}}
+                            @if (is_null($cliente->whatsapp_cliente))
+                            <i class="material-icons">perm_phone_msg</i> No Registra
+                            @else
+                            <i class="material-icons">perm_phone_msg</i> <a
+                                href="https://api.whatsapp.com/send?phone={{$cliente->whatsapp_cliente}}"
+                                target="_blank">+{{$cliente->whatsapp_cliente}}</a>
+                            @endif
+
                         </p>
                         <p>
-                            <i class="material-icons">perm_identity</i> {{$cliente->instagram_cliente}}
+
+                            @if (is_null($cliente->instagram_cliente))
+                            <i class="material-icons">perm_identity</i> No Registra
+                            @else
+                            <i class="material-icons">perm_identity</i> <a
+                                href="https://www.instagram.com/{{$cliente->instagram_cliente}}"
+                                target="_blank">{{$cliente->instagram_cliente}}</a>
+                            @endif
+
+
                         </p>
                         <p>
-                            <i class="material-icons">email</i> {{$cliente->correo}}
+
+                            @if (is_null($cliente->correo))
+                            <i class="material-icons">email</i> No Registra
+                            @else
+                            <i class="material-icons">email</i> <a href="mailto:{{$cliente->correo}}"
+                                target="_blank">{{$cliente->correo}}</a>
+                            @endif
+
+
                         </p>
 
 
@@ -43,7 +67,7 @@
 
                     </div>
                     <div class="card-action">
-                        <a href="{{route('backoffice.cliente.edit', $cliente) }}">Editar</a>
+                        <a href="{{route('backoffice.cliente.edit', $cliente) }}" class="purple-text">Editar</a>
                         {{-- <a href="#" style="color: red" onclick="enviar_formulario()">Eliminar</a> --}}
                     </div>
                 </div>
@@ -53,6 +77,9 @@
             <div class="col s12 m4">
                 @include('themes.backoffice.pages.cliente.includes.cliente_nav')
             </div>
+
+            @include('themes.backoffice.pages.cliente.includes.modal_reserva')
+
 
         </div>
     </div>
@@ -90,5 +117,36 @@
          }
      });
  }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.modal');
+        M.Modal.init(elems);
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+  $('.modal-trigger').on('click', function(){
+        // Obtener los datos del cliente y la reserva seleccionada
+        var clienteNombre = $(this).data('cliente');
+        var fechaReserva = $(this).data('fecha');
+        var observacionReserva = $(this).data('observacion');
+        var masajeReserva = $(this).data('masaje');
+        var personasReserva = $(this).data('personas');
+
+        // Insertar los datos en los elementos del modal
+        $('#modalClienteNombre').text(clienteNombre);
+        $('#modalFechaReserva').text(fechaReserva);
+        $('#modalObservacionReserva').text(observacionReserva);
+        $('#modalMasajeReserva').text(masajeReserva);
+        $('#modalPersonasReserva').text(personasReserva);
+
+    // Abrir el modal
+    var modal = M.Modal.getInstance($('#modalReserva'));
+    modal.open();
+  });
+});
 </script>
 @endsection

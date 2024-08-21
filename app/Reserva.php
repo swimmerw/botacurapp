@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use RealRashid\SweetAlert\Facades\Alert;
+use Carbon\Carbon;
 
 class Reserva extends Model
 {
@@ -42,13 +44,16 @@ class Reserva extends Model
 
         $request->merge(['user_id' => $user_id]);
 
-        Alert::success('Exito', 'Cliente guardado')->showConfirmButton();
+        Alert::success('Exito', 'Reservación Realizada', 'Confirmar')->showConfirmButton();
         return self::create($request->all());
     }
 
 //VALIDACION
 
 //RECUPERACION DE INFORMACION
+public function getFechaVisitaAttribute($value){
+    return Carbon::parse($value)->format('d-m-Y');
+} 
 
 //OTRAS OPERACIONES
 

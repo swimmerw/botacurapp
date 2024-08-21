@@ -12,7 +12,7 @@
 
 
 @section('dropdown_settings')
-<li><a href="{{route ('backoffice.cliente.create') }}" class="grey-text text-darken-2">Crear Usuario</a></li> 
+<li><a href="{{route ('backoffice.cliente.create') }}" class="grey-text text-darken-2">Crear Cliente</a></li> 
 <!-- <li><a href="" class="grey-text text-darken-2">Crear Usuario</a></li> -->
 @endsection
 

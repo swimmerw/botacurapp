@@ -43,7 +43,7 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::get('reserva', 'ReservaController@index')->name('reserva.index');
     
     // Create - Ingresa al formulario para nueva reserva
-    Route::get('reserva/create/{cliente_id}', 'ReservaController@create')->name('reserva.create');
+    Route::get('reserva/create/{cliente}', 'ReservaController@create')->name('reserva.create');
 
     // Store - Guardar la nueva reserva
     Route::post('reserva', 'ReservaController@store')->name('reserva.store');

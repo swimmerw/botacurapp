@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumbs')
-<li><a href="{{route('backoffice.cliente.show', $cliente->reservas) }}">Reservas del cliente</a></li>
+<li><a href="{{route('backoffice.cliente.show', $cliente->id) }}">Reservas del cliente</a></li>
 <li>Crear Reserva</li>
 @endsection
 
@@ -32,7 +32,7 @@
 
                             <div class="row">
                                 <div class="input-field col s12 m6">
-                                <input disabled id="cliente_id" type="hidden" class="form-control @error('cliente_id') is-invalid @enderror" name="cliente_id" value="{{$cliente->id}}" required autocomplete="name" autofocus>
+                                <input id="cliente_id" type="hidden" class="form-control" name="cliente_id" value="{{$cliente->id}}" required>
 
 
                                     <label for="cantidad_personas">Cantidad Personas</label>
@@ -63,9 +63,10 @@
 
                          
                           <div class="row">
+                            {{-- <label for="">Fecha Visita</label> --}}
+                            <p>Fecha Visita: </p>
                             <div class="input-field col s12 m6">
-                              <input id="fecha_visita" type="text" name="fecha_visita" class="datepicker" value="{{ old('fecha_visita') }}">
-                              <label for="fecha_visita">Fecha Visita</label>
+                              <input id="fecha_visita" type="date" name="fecha_visita" class="" value="{{ old('fecha_visita') }}" placeholder="fecha Visita">
                                 @error('fecha_visita')
                                       <span class="invalid-feedback" role="alert">
                                           <strong style="color:red">{{ $message }}</strong>
@@ -74,7 +75,7 @@
                             </div>
 
                             <div class="input-field col s12 m6">
-                              <input id="observacion" name="observacion" class="materialize-textarea @error('nombre_reserva') is-invalid @enderror" {{ old('observacion') }}></textarea>
+                              <textarea id="observacion" name="observacion" class="materialize-textarea @error('nombre_reserva') is-invalid @enderror" {{ old('observacion') }}>{{ old('observacion') }}</textarea>
                               <label for="observacion">Observaciones</label>
                                 @error('observacion')
                                       <span class="invalid-feedback" role="alert">
@@ -111,7 +112,4 @@
 
 
 @section('foot')
-<script>
-
-</script>
 @endsection

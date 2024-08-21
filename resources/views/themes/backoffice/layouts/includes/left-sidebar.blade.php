@@ -66,6 +66,16 @@
                     </a>
                 </li>
                 <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.reserva.index') }}">
+                        <i class="material-icons">
+                            assignment
+                        </i>
+                        <span class="nav-text">
+                            Reservaciones
+                        </span>
+                    </a>
+                </li>
+                <li class="bold">
                     <a class="waves-effect waves-cyan" href="{{ route ('backoffice.programa.index') }}">
                         <i class="material-icons">
                             check_circle

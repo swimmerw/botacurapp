@@ -24,11 +24,11 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'cliente_id'=>['required'],
-            'cantidad_personas'=>['number'],
-            'cantidad_masajes'=>['number'],
-            'fecha_visita'=>['date'],
-            'observacion'=>['required', 'nullable', 'max:255'],
+            'cliente_id'=>['required','exists:clientes,id'],
+            'cantidad_personas'=>['required','integer','min:1'],
+            'cantidad_masajes'=>['nullable','integer','min:0'],
+            'fecha_visita'=>['date', 'nullable'],
+            'observacion'=>['nullable', 'string', 'max:255'],
 
         ];
     }
@@ -36,10 +36,10 @@ class StoreRequest extends FormRequest
     public function messages(){
         return [
             'cliente_id.required'=>'Cliente incorrecto, contactese con el administrador',
-            'cantidad_personas.number'=>'El campo solo acepta valores numéricos',
-            'cantidad_masajes.number'=>'El campo solo acepta valores numéricos',
+            'cantidad_personas.integer'=>'El campo solo acepta valores numéricos',
+            'cantidad_masajes.integer'=>'El campo solo acepta valores numéricos',
             'fecha_visita.date' => 'El campo debe ser una fecha valida',
-            'observacion.max'=>'Excede el maximo de caracteres permitidos'
+            'observacion.max'=>'Excede el máximo de caracteres permitidos'
         ];
     }
 }

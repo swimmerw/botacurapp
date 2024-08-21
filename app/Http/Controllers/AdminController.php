@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Cliente;
+use App\Reserva;
 
 class AdminController extends Controller
 {
 
     public function __construct()
-        {
-	        $this->middleware('role:' . config('app.admin_role'));
-        }
-
+    {
+        $this->middleware('role:' . config('app.admin_role'));
+    }
 
     public function show()
     {
-        return view('themes.backoffice.pages.admin.show');
+        // Contar el número total de clientes
+        $totalClientes = Cliente::count();
+
+        // Contar el número total de reservas
+        $totalReservas = Reserva::count();
+
+        return view('themes.backoffice.pages.admin.show', compact('totalClientes','totalReservas'));
     }
 }
