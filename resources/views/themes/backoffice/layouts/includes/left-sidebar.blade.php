@@ -3,7 +3,7 @@
         <li class="user-details cyan darken-2">
             <div class="row">
                 <div class="col col s4 m4 l4">
-                    <img alt="" class="circle responsive-img valign profile-image cyan" src="images/avatar/avatar-7.png">
+                    <img alt="" class="circle responsive-img valign profile-image cyan" src="/images/avatar/avatar-7.png">
                     </img>
                 </div>
                 <div class="col col s8 m8 l8">
@@ -35,10 +35,10 @@
                         </li>
                     </ul>
                     <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" data-activates="profile-dropdown-nav" href="#">
-                        Sebastián
+                        {{Auth::user()->name}}
                         <i class="mdi-navigation-arrow-drop-down right"></i>
                     </a>
-                    <p class="user-roal">Administrador</p>
+                    <p class="user-roal">{{Auth::user()->list_roles()}}</p>
                 </div>
             </div>
         </li>
@@ -55,6 +55,26 @@
                     </a>
                 </li>
 
+                <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.cliente.index') }}">
+                        <i class="material-icons">
+                            airport_shuttle
+                        </i>
+                        <span class="nav-text">
+                            Clientes
+                        </span>
+                    </a>
+                </li>
+                <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.reserva.index') }}">
+                        <i class="material-icons">
+                            assignment
+                        </i>
+                        <span class="nav-text">
+                            Reservaciones
+                        </span>
+                    </a>
+                </li>
                 <li class="bold">
                     <a class="waves-effect waves-cyan" href="{{ route ('backoffice.programa.index') }}">
                         <i class="material-icons">

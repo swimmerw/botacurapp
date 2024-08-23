@@ -40,7 +40,7 @@ class ProgramaController extends Controller
     public function store(StoreRequest $request, Programa $programa)
     {
         $programa = $programa->store($request);
-        return 'Se ha almacenado el programa';
+        return redirect()->route('backoffice.programa.show', $programa);
     }
 
     /**

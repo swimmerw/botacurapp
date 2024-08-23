@@ -84,7 +84,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function role_assignment($request, array $roles =null)
         {
-            $roles= (is_null($roles)) ? $request->roles : $roles; 
+            $roles = (is_null($roles)) ? $request->roles : $roles; 
             $this->permission_mass_assigment($roles);
             $this->roles()->sync($roles);
             $this->verify_permission_integrity($roles); 
@@ -203,6 +203,15 @@ class User extends Authenticatable implements MustVerifyEmail
                     $this->permissions()->syncWithoutDetaching($permissions);
                 }
             }
+        }
+
+
+
+        public function list_roles()
+        {
+            $roles = $this->roles->pluck('name')->toArray();
+            $string = implode(', ', $roles);
+            return $string;
         }
 
 

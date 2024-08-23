@@ -43,7 +43,8 @@
                          
                           <div class="row">
                             <div class="input-field col s12">
-                              <input id="valor_programa" class="materialize-textarea" name="valor_programa"></textarea>
+                              <input id="valor_programa"
+                              type="text" class="materialize-textarea" name="valor_programa">
                               <label for="valor_programa">Valor Programa</label>
 
                               @error('valor_programa')
@@ -57,7 +58,8 @@
 
                             <div class="row">
                             <div class="input-field col s12">
-                              <input id="descuento" class="materialize-textarea" name="descuento"></textarea>
+                              <input id="descuento"
+                              type="text" class="materialize-textarea" name="descuento">
                               <label for="descuento">Descuento</label>
 
                               @error('descuento')
