@@ -1,5 +1,11 @@
 <?php
 
+use App\CategoriaCompra;
+use App\Sector;
+use App\TipoDocumento;
+use App\TipoTransaccion;
+use App\Ubicacion;
+use App\UnidadMedida;
 use App\Http\Controllers\ReservaController;
 /*
 |--------------------------------------------------------------------------
@@ -38,10 +44,9 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::post('user/{user}/permission_assignment', 'UserController@permission_assignment')->name('user.permission_assignment');
 
     // Metodos Reservas
-    
     // Index - Mostrar una lista de reservas
     Route::get('reserva', 'ReservaController@index')->name('reserva.index');
-    
+
     // Create - Ingresa al formulario para nueva reserva
     Route::get('reserva/create/{cliente}', 'ReservaController@create')->name('reserva.create');
 
@@ -57,10 +62,76 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     // Update - Actualizar una reserva específica
     Route::put('reserva/{id}', 'ReservaController@update')->name('reserva.update');
 
+
+
+
+    // Metodos Complementos CREAR
+    Route::get('sectores/create', function () {
+        return view('themes.backoffice.pages.sector.create');
+    })->name('sectores.create');
+
+    Route::get('ubicaciones/create', function () {
+        return view('themes.backoffice.pages.ubicacion.create');
+    })->name('ubicaciones.create');
+
+    Route::get('unidades_medidas/create', function () {
+        return view('themes.backoffice.pages.unidad_medida.create');
+    })->name('unidades_medidas.create');
+
+    Route::get('tipo_documentos/create', function () {
+        return view('themes.backoffice.pages.tipo_documento.create');
+    })->name('tipo_documentos.create');
+
+    Route::get('tipo_transacciones/create', function () {
+        return view('themes.backoffice.pages.tipo_transaccion.create');
+    })->name('tipo_transacciones.create');
+
+    Route::get('categoria_compras/create', function () {
+        return view('themes.backoffice.pages.categoria_compra.create');
+    })->name('categoria_compras.create');
+
+
+
+
+    // Metodos Complementos EDITAR
+    Route::get('sector/{id}/edit', function ($id) {
+
+        $sector = Sector::findOrFail($id);
+        return view('themes.backoffice.pages.sector.edit', compact('sector'));
+
+    })->name('sector.edit');
+
+    Route::get('ubicacion/{id}/edit', function ($id) {
+
+        $ubicacion = Ubicacion::findOrFail($id);
+        return view('themes.backoffice.pages.ubicacion.edit', compact('ubicacion'));
+
+    })->name('ubicacion.edit');
+
+    Route::get('unidad_medida/{id}/edit', function ($id) {
+        $unidad = UnidadMedida::findOrFail($id);
+        return view('themes.backoffice.pages.unidad_medida.edit', compact('unidad'));
+    })->name('unidad_medida.edit');
+
+    Route::get('tipo_documento/{id}/edit', function ($id) {
+        $documento = TipoDocumento::findOrFail($id);
+        return view('themes.backoffice.pages.tipo_documento.edit', compact('documento'));
+    })->name('tipo_documento.edit');
+
+    Route::get('tipo_transaccion/{id}/edit', function ($id) {
+        $transaccion = TipoTransaccion::findOrFail($id);
+        return view('themes.backoffice.pages.tipo_transaccion.edit', compact('transaccion'));
+    })->name('tipo_transaccion.edit');
+
+    Route::get('categoria_compras/{id}/edit', function ($id) {
+        $categoria = CategoriaCompra::findOrFail($id);
+        return view('themes.backoffice.pages.categoria_compra.edit', compact('categoria'));
+    })->name('categoria_compras.edit');
+
     Route::resource('role', 'RoleController');
     Route::resource('permission', 'PermissionController');
     Route::resource('programa', 'ProgramaController');
     Route::resource('servicio', 'ServicioController');
     Route::resource('cliente', 'ClienteController');
-    // Route::resource('reserva', 'ReservaController');
+    Route::resource('complemento', 'ComplementoController');
 });

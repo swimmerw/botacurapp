@@ -120,6 +120,17 @@
                     </a>
                 </li>
 
+                <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.complemento.index') }}">
+                        <i class="material-icons">
+                            data_usage
+                        </i>
+                        <span class="nav-text">
+                            Complementos
+                        </span>
+                    </a>
+                </li>
+
             </ul>
         </li>
     </ul>
