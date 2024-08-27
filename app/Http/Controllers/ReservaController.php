@@ -68,7 +68,9 @@ class ReservaController extends Controller
      */
     public function show(Reserva $reserva)
     {
-        //
+        return view('themes.backoffice.pages.reserva.show', [
+            'reserva'=>$reserva
+        ]);
     }
 
     /**

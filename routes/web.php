@@ -3,6 +3,7 @@
 use App\CategoriaCompra;
 use App\Sector;
 use App\TipoDocumento;
+use App\TipoProducto;
 use App\TipoTransaccion;
 use App\Ubicacion;
 use App\UnidadMedida;
@@ -54,13 +55,17 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::post('reserva', 'ReservaController@store')->name('reserva.store');
 
     // Show - Mostrar una reserva específica
-    Route::get('reserva/{id}', 'ReservaController@show')->name('reserva.show');
+    Route::get('reserva/{reserva}', 'ReservaController@show')->name('reserva.show');
 
     // Edit - Mostrar el formulario para editar una reserva
-    Route::get('reserva/{id}/edit', 'ReservaController@edit')->name('reserva.edit');
+    // Route::get('reserva/{id}/edit', 'ReservaController@edit')->name('reserva.edit');
+
+    Route::get('reserva/{reserva}/edit', 'ReservaController@edit')->name('reserva.edit');
 
     // Update - Actualizar una reserva específica
     Route::put('reserva/{id}', 'ReservaController@update')->name('reserva.update');
+
+    Route::delete('reserva/{reserva}', 'ReservaController@destroy')->name('reserva.destroy');
 
 
 
@@ -89,6 +94,11 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::get('categoria_compras/create', function () {
         return view('themes.backoffice.pages.categoria_compra.create');
     })->name('categoria_compras.create');
+
+    Route::get('tipo_productos/create', function () {
+        $sectores = Sector::all();
+        return view('themes.backoffice.pages.tipo_producto.create', compact('sectores'));
+    })->name('tipo_productos.create');
 
 
 
@@ -127,6 +137,11 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
         $categoria = CategoriaCompra::findOrFail($id);
         return view('themes.backoffice.pages.categoria_compra.edit', compact('categoria'));
     })->name('categoria_compras.edit');
+
+    Route::get('tipo_producto/{id}/edit', function ($id) {
+        $producto = TipoProducto::findOrFail($id);
+        return view('themes.backoffice.pages.tipo_producto.edit', compact('producto'));
+    })->name('tipo_producto.edit');
 
     Route::resource('role', 'RoleController');
     Route::resource('permission', 'PermissionController');

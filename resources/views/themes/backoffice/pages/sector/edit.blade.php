@@ -1,6 +1,6 @@
 @extends('themes.backoffice.layouts.admin')
 
-@section('tittle','Editar sector')
+@section('title','Editar sector')
 
 @section('head')
 @endsection

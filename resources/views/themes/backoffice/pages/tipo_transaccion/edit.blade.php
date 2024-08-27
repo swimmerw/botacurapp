@@ -1,6 +1,6 @@
 @extends('themes.backoffice.layouts.admin')
 
-@section('tittle','Editar unidad de medida')
+@section('title','Editar unidad de medida')
 
 @section('head')
 @endsection

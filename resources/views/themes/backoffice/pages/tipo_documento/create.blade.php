@@ -1,13 +1,13 @@
 @extends('themes.backoffice.layouts.admin')
 
-@section('tittle','Crear unidad de medida')
+@section('title','Crear Tipo Documentos')
 
 @section('head')
 @endsection
 
 @section('breadcrumbs')
 <li><a href="{{route('backoffice.complemento.index') }}">Complementos</a></li>
-<li>Crear Tipo Documento</li>
+<li>Crear Tipo Documentos</li>
 @endsection
 
 

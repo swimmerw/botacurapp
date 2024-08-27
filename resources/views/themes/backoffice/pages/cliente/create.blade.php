@@ -1,6 +1,6 @@
 @extends('themes.backoffice.layouts.admin')
 
-@section('tittle','Dar de alta un nuevo Cliente')
+@section('title','Dar de alta un nuevo Cliente')
 
 @section('head')
 @endsection
@@ -70,7 +70,7 @@
                             </div>
 
                             <div class="input-field col s12 m6">
-                              <input id="instagram_cliente" type="text" name="instagram_cliente" class="form-control @error('nombre_cliente') is-invalid @enderror" {{ old('instagram_cliente') }}>
+                              <input id="instagram_cliente" type="text" name="instagram_cliente" class="form-control @error('nombre_cliente') is-invalid @enderror" value="{{ old('instagram_cliente') }}">
                               <label for="instagram_cliente">Instagram Cliente</label>
                                 @error('instagram_cliente')
                                       <span class="invalid-feedback" role="alert">

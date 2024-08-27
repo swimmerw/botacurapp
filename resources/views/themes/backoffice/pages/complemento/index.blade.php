@@ -19,6 +19,8 @@
         Medida</a></li>
 <li><a href="{{route ('backoffice.tipo_documentos.create') }}" class="grey-text text-darken-2">Crear Tipo de
         Documento</a></li>
+<li><a href="{{route ('backoffice.tipo_productos.create') }}" class="grey-text text-darken-2">Crear Tipo de
+        Producto</a></li>
 <li><a href="{{route ('backoffice.tipo_transacciones.create') }}" class="grey-text text-darken-2">Crear Tipo de
         Transacción</a></li>
 <li><a href="{{route ('backoffice.categoria_compras.create') }}" class="grey-text text-darken-2">Crear Categoria
@@ -54,19 +56,24 @@
                                 @foreach($sectores as $sector)
                                 <tr>
                                     <td>
-                                        <a href="{{-- route('backoffice.sector.show', $sector) --}}">
-                                            {{ $sector->nombre }}
-                                        </a>
+
+                                        {{ $sector->nombre }}
+
                                     </td>
                                     <td>
                                         <a href="{{ route('backoffice.sector.edit', $sector->id) }}">
                                             <i class="material-icons">mode_edit</i> Editar
                                         </a>
-                                        
-                                        <a href="#" style="color: red" onclick="enviar_formulario('{{ route('backoffice.complemento.destroy', $sector->id) }}', 'sectores')">
+
+
+                                    </td>
+
+                                    <td>
+
+                                        <a href="#" style="color: red"
+                                            onclick="enviar_formulario('{{ route('backoffice.complemento.destroy', $sector->id) }}', 'sectores')">
                                             <i class="material-icons">delete</i> Eliminar
                                         </a>
-                                         
                                     </td>
                                 </tr>
                                 @endforeach
@@ -104,13 +111,20 @@
                                 @foreach($ubicaciones as $ubicacion)
                                 <tr>
                                     <td>
-                                        <a href="{{-- route('backoffice.ubicacion.show', $ubicacion) --}}">
-                                            {{ $ubicacion->nombre }}
-                                        </a>
+
+                                        {{ $ubicacion->nombre }}
+
                                     </td>
                                     <td>
                                         <a href="{{ route('backoffice.ubicacion.edit', $ubicacion->id) }}">
                                             <i class="material-icons">mode_edit</i> Editar
+                                        </a>
+                                    </td>
+                                    <td>
+
+                                        <a href="#" style="color: red"
+                                            onclick="enviar_formulario('{{ route('backoffice.complemento.destroy', $ubicacion->id) }}', 'ubicaciones')">
+                                            <i class="material-icons">delete</i> Eliminar
                                         </a>
                                     </td>
                                 </tr>
@@ -153,9 +167,9 @@
                                 @foreach($documentos as $documento)
                                 <tr>
                                     <td>
-                                        <a href="{{-- route('backoffice.documento.show', $documento) --}}">
-                                            {{ $documento->nombre }}
-                                        </a>
+
+                                        {{ $documento->nombre }}
+
                                     </td>
                                     <td>
                                         @if (is_null($documento->descripcion))
@@ -169,6 +183,14 @@
                                         <a href="{{ route('backoffice.tipo_documento.edit', $documento->id) }}">
                                             <i class="material-icons">mode_edit</i> Editar
                                         </a>
+                                    </td>
+
+                                    <td>
+                                        <a href="#" style="color: red"
+                                            onclick="enviar_formulario('{{ route('backoffice.complemento.destroy', $documento->id) }}', 'tipos_documentos')">
+                                            <i class="material-icons">delete</i> Eliminar
+                                        </a>
+
                                     </td>
                                 </tr>
                                 @endforeach
@@ -207,14 +229,21 @@
                                 @foreach($transacciones as $transaccion)
                                 <tr>
                                     <td>
-                                        <a href="{{-- route('backoffice.transaccion.show', $transaccion) --}}">
-                                            {{ $transaccion->nombre }}
-                                        </a>
+
+                                        {{ $transaccion->nombre }}
+
                                     </td>
                                     <td>
                                         <a href="{{ route('backoffice.tipo_transaccion.edit', $transaccion->id) }}">
                                             <i class="material-icons">mode_edit</i> Editar
                                         </a>
+                                    </td>
+                                    <td>
+                                        <a href="#" style="color: red"
+                                            onclick="enviar_formulario('{{ route('backoffice.complemento.destroy', $transaccion->id) }}', 'tipos_transacciones')">
+                                            <i class="material-icons">delete</i> Eliminar
+                                        </a>
+
                                     </td>
                                 </tr>
                                 @endforeach
@@ -258,13 +287,21 @@
                                 @foreach($categorias as $categoria)
                                 <tr>
                                     <td>
-                                        <a href="{{-- route('backoffice.categoria.show', $categoria) --}}">
-                                            {{ $categoria->nombre }}
-                                        </a>
+
+                                        {{ $categoria->nombre }}
+
                                     </td>
                                     <td>
                                         <a href="{{ route('backoffice.categoria_compras.edit', $categoria->id) }}">
                                             <i class="material-icons">mode_edit</i> Editar
+                                        </a>
+                                    </td>
+
+                                    <td>
+
+                                        <a href="#" style="color: red"
+                                            onclick="enviar_formulario('{{ route('backoffice.complemento.destroy', $categoria->id) }}', 'categoria_compras')">
+                                            <i class="material-icons">delete</i> Eliminar
                                         </a>
                                     </td>
                                 </tr>
@@ -289,53 +326,41 @@
 
                         {{-- CONTENIDO --}}
                         <div class="card-panel gradient-45deg-light-blue-cyan white-text center">
-                            <h4>Unidades de Medida</h4>
+                            <h4>Tipos de Productos</h4>
                         </div>
-                        @if($unidades->isNotEmpty())
+                        @if($tipoProductos->isNotEmpty())
                         <table class="centered responsive-table">
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
-                                    <th>Abreviatura</th>
-                                    <th>Tipo</th>
-                                    <th>Descripcion</th>
+                                    <th>Sector</th>
+
                                     <th colspan="2">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($unidades as $unidad)
+                                @foreach($tipoProductos as $tipoProducto)
                                 <tr>
                                     <td>
-                                        <a href="{{-- route('backoffice.unidad.show', $unidad) --}}">
-                                            {{ $unidad->nombre }}
-                                        </a>
-                                    </td>
-                                    <td>
 
-                                        {{ $unidad->abreviatura }}.
+                                        {{ $tipoProducto->nombre }}
 
                                     </td>
                                     <td>
 
-                                        {{ ucwords($unidad->tipo) }}
+                                        {{ $tipoProducto->sector->nombre }}.
 
                                     </td>
                                     <td>
-                                        @if (is_null($unidad->descripcion))
-                                        No Registra
-                                        @else
-                                        {{ $unidad->descripcion }}
-                                        @endif
-
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('backoffice.unidad_medida.edit', $unidad->id) }}">
+                                        <a href="{{ route('backoffice.tipo_producto.edit', $tipoProducto->id) }}">
                                             <i class="material-icons">mode_edit</i> Editar
                                         </a>
-                                        <a href="#" style="color: red" onclick="enviar_formulario('{{ route('backoffice.complemento.destroy', $unidad->id) }}', 'unidades_medidas')">
+                                    </td>
+                                    <td>
+                                        <a href="#" style="color: red"
+                                            onclick="enviar_formulario('{{ route('backoffice.complemento.destroy', $tipoProducto->id) }}', 'productos')">
                                             <i class="material-icons">delete</i> Eliminar
                                         </a>
-
                                     </td>
                                 </tr>
                                 @endforeach
@@ -354,6 +379,82 @@
 
 
         </div>
+
+
+        <div class="row">
+                        {{-- UNIDADES DE MEDIDA --}}
+                        <div class="col s12 m6">
+                            <div class="card-panel">
+                                <div class="row">
+            
+                                    {{-- CONTENIDO --}}
+                                    <div class="card-panel gradient-45deg-light-blue-cyan white-text center">
+                                        <h4>Unidades de Medida</h4>
+                                    </div>
+                                    @if($unidades->isNotEmpty())
+                                    <table class="centered responsive-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Abreviatura</th>
+                                                <th>Tipo</th>
+                                                <th>Descripcion</th>
+                                                <th colspan="2">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($unidades as $unidad)
+                                            <tr>
+                                                <td>
+            
+                                                    {{ $unidad->nombre }}
+            
+                                                </td>
+                                                <td>
+            
+                                                    {{ $unidad->abreviatura }}.
+            
+                                                </td>
+                                                <td>
+            
+                                                    {{ ucwords($unidad->tipo) }}
+            
+                                                </td>
+                                                <td>
+                                                    @if (is_null($unidad->descripcion))
+                                                    No Registra
+                                                    @else
+                                                    {{ $unidad->descripcion }}
+                                                    @endif
+            
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('backoffice.unidad_medida.edit', $unidad->id) }}">
+                                                        <i class="material-icons">mode_edit</i> Editar
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="#" style="color: red"
+                                                        onclick="enviar_formulario('{{ route('backoffice.complemento.destroy', $unidad->id) }}', 'unidades_medidas')">
+                                                        <i class="material-icons">delete</i> Eliminar
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    @else
+                                    <h5 class="center">No existen registros</h5>
+                                    @endif
+            
+            
+            
+            
+                                </div>
+                            </div>
+                        </div>
+        </div>
+
     </div>
 </div>
 </div>
@@ -366,7 +467,7 @@
 
 @section('foot')
 <script>
-function enviar_formulario(actionUrl, table) {
+    function enviar_formulario(actionUrl, table) {
     const form = document.getElementById('delete_form');
     form.action = actionUrl;
     document.getElementById('table_name').value = table; // Asegúrate de que este valor sea correcto

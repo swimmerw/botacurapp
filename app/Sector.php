@@ -14,10 +14,10 @@ class Sector extends Model
 
 
 //RELACIONES
-// public function programa()
-// {
-//     return $this->belongsTo('App\Programa');
-// }
+public function tiposProductos()
+{
+    return $this->hasMany('App\TipoProducto');
+}
 
 // public function reservaciones()
 // {

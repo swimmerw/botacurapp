@@ -2,9 +2,9 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use RealRashid\SweetAlert\Facades\Alert;
-use Carbon\Carbon;
 
 class Reserva extends Model
 {
@@ -51,9 +51,10 @@ class Reserva extends Model
 //VALIDACION
 
 //RECUPERACION DE INFORMACION
-public function getFechaVisitaAttribute($value){
-    return Carbon::parse($value)->format('d-m-Y');
-} 
+    public function getFechaVisitaAttribute($value)
+    {
+        return Carbon::parse($value)->format('d-m-Y');
+    }
 
 //OTRAS OPERACIONES
 
