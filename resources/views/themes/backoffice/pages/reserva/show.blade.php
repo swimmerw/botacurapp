@@ -1,83 +1,129 @@
 @extends('themes.backoffice.layouts.admin')
 
-@section('title', '')
+@section('title', 'Reserva de '.$reserva->cliente->nombre_cliente)
 
 @section('head')
 @endsection
 
 @section('breadcrumbs')
-<li><a href="{{route('backoffice.reserva.index')}}">Clientes del Sistema</a></li>
-{{-- <li>{{$cliente->nombre_cliente}}</li> --}}
+<li><a href="{{route('backoffice.reserva.index')}}">Reservas</a></li>
+<li>{{$reserva->cliente->nombre_cliente}}</li>
 @endsection
 
 @section('dropdown_settings')
-<li><a href="{{ route('backoffice.reserva.create',$reserva->cliente->id) }}" class="grey-text text-darken-2">Crear Nueva Reserva</a></li>
+<li><a href="{{ route('backoffice.reserva.visitas.create',$reserva) }}" class="grey-text text-darken-2">Generar Visita</a></li>
 @endsection
 
 @section('content')
 <div class="section">
-    <p class="caption"><strong>Cliente:</strong> {{ $reserva->cliente->nombre_cliente }}</p>
+    <p class="caption"><strong>Fecha de reserva:</strong> {{ $reserva->fecha_visita }}</p>
     <div class="divider"></div>
     <div id="basic-form" class="section">
         <div class="row">
             <div class="col s12 m8">
+                {{-- TABLA CLIENTE --}}
                 <div class="card">
                     <div class="card-content">
+                        <span
+                            class="card-title activator grey-text text-darken-4">{{$reserva->cliente->nombre_cliente}}</span>
+                        <div class="row">
+                            <div class="col s12 m6 l4">
+                                <p>
+                                    @if (is_null($reserva->cliente->whatsapp_cliente))
+                                    <i class="material-icons">perm_phone_msg</i> No Registra
+                                    @else
+                                    <i class="material-icons">perm_phone_msg</i> <a
+                                        href="https://api.whatsapp.com/send?phone={{$reserva->cliente->whatsapp_cliente}}"
+                                        target="_blank">+{{$reserva->cliente->whatsapp_cliente}}</a>
+                                    @endif
+
+                                </p>
+                            </div>
+                            <div class="col s12 m6 l4">
+
+                                <p>
+
+                                    @if (is_null($reserva->cliente->instagram_cliente))
+                                    <i class="material-icons">perm_identity</i> No Registra
+                                    @else
+                                    <i class="material-icons">perm_identity</i> <a
+                                        href="https://www.instagram.com/{{$reserva->cliente->instagram_cliente}}"
+                                        target="_blank">{{$reserva->cliente->instagram_cliente}}</a>
+                                    @endif
+
+
+                                </p>
+                            </div>
+
+                            <div class="col s12 m6 l4">
+                                <p>
+
+                                    @if (is_null($reserva->cliente->correo))
+                                    <i class="material-icons">email</i> No Registra
+                                    @else
+                                    <i class="material-icons">email</i> <a href="mailto:{{$reserva->cliente->correo}}"
+                                        target="_blank">{{$reserva->cliente->correo}}</a>
+                                    @endif
+
+
+                                </p>
+                            </div>
+
+                        </div>
 
 
 
-                        <span class="card-title activator grey-text text-darken-4">{{--$cliente->nombre_cliente--}}</span>
-                        <p>
-                            {{-- @if (is_null($cliente->whatsapp_cliente))
-                            <i class="material-icons">perm_phone_msg</i> No Registra
-                            @else
-                            <i class="material-icons">perm_phone_msg</i> <a
-                                href="https://api.whatsapp.com/send?phone={{$cliente->whatsapp_cliente}}"
-                                target="_blank">+{{$cliente->whatsapp_cliente}}</a>
-                            @endif --}}
-
-                        </p>
-                        <p>
-
-                            {{-- @if (is_null($cliente->instagram_cliente))
-                            <i class="material-icons">perm_identity</i> No Registra
-                            @else
-                            <i class="material-icons">perm_identity</i> <a
-                                href="https://www.instagram.com/{{$cliente->instagram_cliente}}"
-                                target="_blank">{{$cliente->instagram_cliente}}</a>
-                            @endif --}}
-
-
-                        </p>
-                        <p>
-
-                            {{-- @if (is_null($cliente->correo))
-                            <i class="material-icons">email</i> No Registra
-                            @else
-                            <i class="material-icons">email</i> <a href="mailto:{{$cliente->correo}}"
-                                target="_blank">{{$cliente->correo}}</a>
-                            @endif --}}
-
-
-                        </p>
-
-
-
-
-                    </div>
-                    <div class="card-action">
-                        <a href="{{--route('backoffice.cliente.edit', $cliente) --}}" class="purple-text">Editar</a>
-                        {{-- <a href="#" style="color: red" onclick="enviar_formulario()">Eliminar</a> --}}
+                        <div class="card-action">
+                            <a href="{{route('backoffice.cliente.edit', $reserva->cliente_id)}}"
+                                class="purple-text">Editar</a>
+                            {{-- <a href="#" style="color: red" onclick="enviar_formulario()">Eliminar</a> --}}
+                        </div>
                     </div>
                 </div>
+
+
+                {{-- TABLA VISITA --}}
+
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">Visita</span>
+
+
+                        @if ($reserva->visitas->isEmpty())
+                        
+                        <h5>Aún no se registra la visita para esta reserva</h5>
+                        @else
+                        @foreach ($reserva->visitas as $visita)
+                        <div class="row">
+                            <div class="col s12 m6 l4">
+                                <p>
+                                    <i class="material-icons">perm_phone_msg</i> 
+                                    
+                                        {{$reserva->cliente->whatsapp_cliente}}
+                                    
+                                </p>
+                                <p>Horario de Sauna: {{ $visita->horario_sauna }}</p>
+                                <!-- Agrega más detalles de la visita aquí -->
+                            </div>
+                        </div>
+                    @endforeach
+
+                        
+                        @endif
+
+
+                    </div>
+                </div>
+
+
             </div>
 
 
-            {{-- <div class="col s12 m4">
-                @include('themes.backoffice.pages.reserva.includes.cliente_nav')
+            <div class="col s12 m4">
+                @include('themes.backoffice.pages.reserva.includes.reagendamiento')
             </div>
 
-            @include('themes.backoffice.pages.reserva.includes.modal_reserva') --}}
+            {{-- @include('themes.backoffice.pages.reserva.includes.reserva') --}}
 
 
         </div>
@@ -117,7 +163,7 @@
      });
  }
 </script>
-{{-- 
+{{--
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var elems = document.querySelectorAll('.modal');

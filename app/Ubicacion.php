@@ -13,6 +13,10 @@ class Ubicacion extends Model
         'nombre'
     ];
 
+    public function visitas(){
+        return $this->hasMany(Visita::class, 'id_ubicacion');
+    }
+
 
 //RELACIONES
 // public function programa()

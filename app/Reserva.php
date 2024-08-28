@@ -16,19 +16,24 @@ class Reserva extends Model
     ];
 
     //RELACIONES
-    public function servicios()
+    // public function programas()
+    // {
+    //     return $this->belongsToMany('App\Programa');
+    // }
+
+    public function visitas()
     {
-        return $this->belongsToMany('App\Servicio');
+        return $this->hasMany(Visita::class, 'id_reserva');
     }
 
-    public function programas()
+    public function reagendamientos()
     {
-        return $this->belongsToMany('App\Programa');
+        return $this->hasMany(Reagendamiento::class, 'id_reserva');
     }
 
     public function cliente()
     {
-        return $this->belongsTo('App\Cliente');
+        return $this->belongsTo(Cliente::class);
     }
 
 //ALMACENAMIENTO

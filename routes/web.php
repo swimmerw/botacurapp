@@ -149,4 +149,6 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::resource('servicio', 'ServicioController');
     Route::resource('cliente', 'ClienteController');
     Route::resource('complemento', 'ComplementoController');
+    Route::resource('reserva.reagendamientos', 'ReagendamientoController');
+    Route::resource('reserva.visitas', 'VisitaController');
 });

@@ -17,13 +17,11 @@ class ReservaController extends Controller
      */
     public function index()
     {
-        // Configurar Carbon para que use el idioma español
         Carbon::setLocale('es');
 
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
 
-        // Obtener todas las reservas agrupadas por mes y año
         $reservasPorMes = Reserva::with('cliente')
             ->orderBy('fecha_visita')
             ->get()
