@@ -7,6 +7,8 @@ use App\Reserva;
 use App\Ubicacion;
 use App\Visita;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class VisitaController extends Controller
 {
@@ -28,11 +30,15 @@ class VisitaController extends Controller
     public function create($reserva)
     {
         $reserva = Reserva::findOrFail($reserva);
+        $serviciosDisponibles = $reserva->programa->servicios->pluck('nombre_servicio')->toArray();
+
+
 
         return view('themes.backoffice.pages.visita.create', [
             'reserva' => $reserva,
             'ubicaciones' => Ubicacion::all(),
             'lugares' => LugarMasaje::all(),
+            'servicios' => $serviciosDisponibles,
         ]);
     }
 
@@ -44,13 +50,35 @@ class VisitaController extends Controller
      */
     public function store(Request $request, Reserva $reserva)
     {
-        dd($request);
-        $visita = Visita::create([
-            'horario_sauna' => Carbon::CreateFromFormat('h:i A'),
 
+        $sauna = null;
+        $tinaja = null;
+        $masaje = null;
+    
+        if ($request->has('horario_sauna')) {
+            $sauna = Carbon::CreateFromFormat('h:i A', $request->input('horario_sauna'));
+        }
+        if ($request->has('horario_tinaja')) {
+            $tinaja = Carbon::CreateFromFormat('h:i A', $request->input('horario_tinaja'));
+        }
+        if ($request->has('horario_masaje')) {
+            $masaje = Carbon::CreateFromFormat('h:i A', $request->input('horario_masaje'));
+        }
+    
+        $visita = Visita::create([
+            'id_reserva' => $request->input('id_reserva'),
+            'trago_cortesia' => $request->input('trago_cortesia'),
+            'alergias' => $request->input('alergias'),
+            'observacion' => $request->input('observacion'),
+            'id_ubicacion' => $request->input('id_ubicacion'),
+            'id_lugar_masaje' => $request->input('id_lugar_masaje'),
+            'horario_sauna' => $sauna,
+            'horario_tinaja' => $tinaja,
+            'horario_masaje' => $masaje,
         ]);
+
         Alert::success('Éxito', 'Se ha generado la visita')->showConfirmButton();
-        return redirect()->route('backoffice.reserva.show', ['reserva' => $reserva->id]);
+        return redirect()->route('backoffice.reserva.show', ['reserva' => $request->input('id_reserva')]);
     }
 
     /**

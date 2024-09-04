@@ -63,7 +63,7 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::get('reserva/{reserva}/edit', 'ReservaController@edit')->name('reserva.edit');
 
     // Update - Actualizar una reserva específica
-    Route::put('reserva/{id}', 'ReservaController@update')->name('reserva.update');
+    Route::put('reserva/{reserva}', 'ReservaController@update')->name('reserva.update');
 
     Route::delete('reserva/{reserva}', 'ReservaController@destroy')->name('reserva.destroy');
 

@@ -33,35 +33,38 @@
 
 
                             <div class="row">
-                                <div class="input-field col s12 m6 l4">
+                                <div class="input-field col s12 m6 l4" hidden>
                                     <input id="id_reserva" type="hidden" class="form-control" name="id_reserva"
                                         value="{{$reserva->id}}" required>
+                                </div>
+                                <div class="input-field col s12 m6 l4" @if(!in_array('Sauna', $servicios)) hidden @endif>
 
                                     <label for="horario_sauna">Horario Sauna</label>
                                     <input id="horario_sauna" type="text" name="horario_sauna" class="timepicker"
-                                        value="{{ old('horario_sauna') }}" placeholder="">
+                                        value="{{ old('horario_sauna') }}" placeholder="" @if(!in_array('Sauna', $servicios)) disabled hidden @endif>
                                     @error('horario_sauna')
                                     <span class="invalid-feedback" role="alert">
                                         <strong style="color:red">{{ $message }}</strong>
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="input-field col s12 m6 l4">
+
+                                <div class="input-field col s12 m6 l4" @if(!in_array('Tinaja', $servicios)) hidden @endif>
 
                                     <label for="horario_tinaja">Horario Tinaja</label>
                                     <input id="horario_tinaja" type="text" name="horario_tinaja" class="timepicker"
-                                        value="{{ old('horario_tinaja') }}" placeholder="">
+                                        value="{{ old('horario_tinaja') }}" placeholder="" @if(!in_array('Tinaja', $servicios)) disabled hidden @endif>
                                     @error('horario_tinaja')
                                     <span class="invalid-feedback" role="alert">
                                         <strong style="color:red">{{ $message }}</strong>
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="input-field col s12 m6 l4">
+                                <div class="input-field col s12 m6 l4" @if(!in_array('Masaje', $servicios)) hidden @endif>
 
                                     <label for="horario_masaje">Horario Masaje</label>
                                     <input id="horario_masaje" type="text" name="horario_masaje" class="timepicker"
-                                        value="{{ old('horario_masaje') }}" placeholder="">
+                                        value="{{ old('horario_masaje') }}" placeholder="" @if(!in_array('Masaje', $servicios)) disabled hidden @endif>
                                     @error('horario_masaje')
                                     <span class="invalid-feedback" role="alert">
                                         <strong style="color:red">{{ $message }}</strong>
@@ -70,24 +73,8 @@
 
                                 </div>
 
-                            </div>
 
-                            <div class="row">
-                                <div class="input-field col s12 m6 l4">
 
-                                    <select name="trago_cortesia" id="trago_cortesia">
-                                        <option value="Si">Si</option>
-                                        <option value="No" selected>No</option>
-                                    </select>
-
-                
-                                    @error('trago_cortesia')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong style="color:red">{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                    {{-- <label for="trago_cortesia">Trago cortesia</label> --}}
-                                </div>
                                 <div class="input-field col s12 m6 l4">
 
                                     <label for="alergias">Alérgias</label>
@@ -99,9 +86,10 @@
                                     </span>
                                     @enderror
                                 </div>
+
                                 <div class="input-field col s12 m6 l4">
 
-                                    <label for="observacion">observaciones</label>
+                                    <label for="observacion">Observaciones</label>
                                     <input id="observacion" type="text" name="observacion" class=""
                                         value="{{ old('observacion') }}">
                                     @error('observacion')
@@ -112,15 +100,13 @@
 
                                 </div>
 
-                            </div>
 
-
-                            <div class="row">
                                 <div class="input-field col s12 m6 l4">
                                     <select name="id_ubicacion" id="id_ubicacion">
                                         <option value="" selected disabled="">-- Seleccione --</option>
                                         @foreach ($ubicaciones as $ubicacion)
-                                            <option value="{{$ubicacion->id}}" {{ old('id_ubicacion') == $ubicacion->nombre ? 'selected' : '' }}>{{$ubicacion->nombre}}</option>
+                                        <option value="{{$ubicacion->id}}" {{ old('id_ubicacion')==$ubicacion->nombre ?
+                                            'selected' : '' }}>{{$ubicacion->nombre}}</option>
                                         @endforeach
                                     </select>
                                     @error('id_ubicacion')
@@ -134,7 +120,8 @@
                                     <select name="id_lugar_masaje" id="id_lugar_masaje">
                                         <option value="" selected disabled="">-- Seleccione --</option>
                                         @foreach ($lugares as $lugar)
-                                            <option value="{{$lugar->id}}" {{ old('id_lugar_masaje') == $lugar->nombre ? 'selected' : '' }}>{{$lugar->nombre}}</option>
+                                        <option value="{{$lugar->id}}" {{ old('id_lugar_masaje')==$lugar->nombre ?
+                                            'selected' : '' }}>{{$lugar->nombre}}</option>
                                         @endforeach
                                     </select>
                                     @error('id_lugar_masaje')
@@ -143,6 +130,35 @@
                                     </span>
                                     @enderror
                                     <label for="id_lugar_masaje">Lugar Masaje</label>
+                                </div>
+
+
+
+
+                                <div class="col s12 m6 l4">
+                                    <label for="trago_cortesia">Trago cortesia</label>
+                                    <p>
+                                        <label>
+                                            <input name="trago_cortesia" id="trago_cortesia" type="radio" class="with-gap" value="Si" />
+                                            <span>Si</span>
+                                        </label>
+                                    
+                                        <label>
+                                            <input name="trago_cortesia" id="trago_cortesia" type="radio" class="with-gap" value="No" checked/>
+                                            <span>No</span>
+                                        </label>
+                                    </p>
+                                    {{-- <select name="trago_cortesia" id="trago_cortesia">
+                                        <option value="Si">Si</option>
+                                        <option value="No" selected>No</option>
+                                    </select> --}}
+
+                                    @error('trago_cortesia')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong style="color:red">{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                    
                                 </div>
                             </div>
 

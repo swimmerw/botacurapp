@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Cliente;
 use App\Http\Requests\Reserva\StoreRequest;
 use App\Reserva;
+use App\Programa;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -40,9 +41,11 @@ class ReservaController extends Controller
     public function create($cliente)
     {
         $cliente = Cliente::findOrFail($cliente);
+        $programas = Programa::all();
 
         return view('themes.backoffice.pages.reserva.create', [
             'cliente' => $cliente,
+            'programas' => $programas,
         ]);
     }
 

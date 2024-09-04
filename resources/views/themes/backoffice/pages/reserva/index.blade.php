@@ -59,8 +59,9 @@ document.addEventListener('DOMContentLoaded', function() {
         @foreach($reservas as $reserva)
         var formatoFecha = convertirFecha('{{$reserva->fecha_visita}}')
         eventos.push({
-            title: '{{ addslashes($reserva->cliente->nombre_cliente) }} - {{ $reserva->cantidad_personas }} personas',
-            start: formatoFecha,
+            title: '{{ addslashes($reserva->cliente->nombre_cliente) }} - {{ $reserva->cantidad_personas }} personas - {{$reserva->programa->nombre_programa}}',
+            start: formatoFecha+' 10:00',
+            end: formatoFecha+' 19:00',
             url: '{{ route('backoffice.reserva.show', $reserva->id) }}',
             description: '{{ addslashes($reserva->observacion) }}'
         });
