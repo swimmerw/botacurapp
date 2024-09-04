@@ -246,6 +246,9 @@
       </div>
 
 
+      <div class="col s12 m4">
+        @include('themes.backoffice.pages.reserva.includes.venta')
+      </div>
 
 
     </div>

@@ -19,7 +19,33 @@ class VisitaController extends Controller
      */
     public function index()
     {
-        //
+        // Asignacion de dias Hoy y Mañana
+        $hoy = Carbon::today();
+        $manana = Carbon::tomorrow();
+
+    // Filtrar las reservas que tienen visitas y cuya fecha de visita es hoy o mañana
+    $reservas = Reserva::with('visitas', 'cliente', 'programa', 'user')
+        ->whereBetween('fecha_visita', [$hoy, $manana])
+        ->get();
+
+    // Filtrar por visitas de Hoy
+    $reservasHoy = $reservas->filter(function ($reserva) use ($hoy) {
+        return Carbon::parse($reserva->fecha_visita)->isSameDay($hoy);
+    });
+
+    // Filtrar por visitas de Mañana
+    $reservasManana = $reservas->filter(function ($reserva) use ($manana) {
+        return Carbon::parse($reserva->fecha_visita)->isSameDay($manana);
+    });
+
+
+        //Retorno de la vista
+        return view('themes.backoffice.pages.visita.index',[
+            'reservasHoy' => $reservasHoy,
+            'reservasManana' => $reservasManana,
+            //Reservas para la relacion con visitas
+            // 'reservas' => Reserva::with('cliente', 'programa', 'user')->get(),
+        ]);
     }
 
     /**

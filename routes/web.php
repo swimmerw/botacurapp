@@ -7,6 +7,7 @@ use App\TipoProducto;
 use App\TipoTransaccion;
 use App\Ubicacion;
 use App\UnidadMedida;
+use App\Venta;
 use App\Http\Controllers\ReservaController;
 /*
 |--------------------------------------------------------------------------
@@ -151,4 +152,6 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::resource('complemento', 'ComplementoController');
     Route::resource('reserva.reagendamientos', 'ReagendamientoController');
     Route::resource('reserva.visitas', 'VisitaController');
+    Route::resource('visita', 'VisitaController');
+    Route::resource('reserva.venta', 'VentaController');
 });

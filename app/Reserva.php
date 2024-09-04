@@ -8,6 +8,9 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class Reserva extends Model
 {
+    protected $dates = ['fecha_visita'];
+
+
     protected $fillable = [
         'cantidad_personas', 'fecha_visita', 'descripcion', 'cliente_id',
         'cantidad_masajes',
@@ -39,6 +42,11 @@ class Reserva extends Model
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function venta()
+    {
+        return $this->hasOne(Venta::class, 'id_reserva');
     }
 
 //ALMACENAMIENTO
