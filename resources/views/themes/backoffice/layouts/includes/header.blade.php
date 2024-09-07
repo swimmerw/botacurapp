@@ -7,7 +7,7 @@
                     <li>
                         <h1 class="logo-wrapper">
                             <a class="brand-logo darken-1" href="index.html">
-                                <img alt="materialize logo" src="/images/logo/materialize-logo.png">
+                                <img alt="botacura logo" src="/images/logo/logo.png" >
                                 <span class="logo-text hide-on-med-and-down">BotacurApp</span>
                             </a>
                         </h1>

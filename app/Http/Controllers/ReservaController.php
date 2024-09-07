@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Cliente;
 use App\Http\Requests\Reserva\StoreRequest;
 use App\Reserva;
+use App\Programa;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -17,13 +18,11 @@ class ReservaController extends Controller
      */
     public function index()
     {
-        // Configurar Carbon para que use el idioma español
         Carbon::setLocale('es');
 
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
 
-        // Obtener todas las reservas agrupadas por mes y año
         $reservasPorMes = Reserva::with('cliente')
             ->orderBy('fecha_visita')
             ->get()
@@ -42,9 +41,11 @@ class ReservaController extends Controller
     public function create($cliente)
     {
         $cliente = Cliente::findOrFail($cliente);
+        $programas = Programa::all();
 
         return view('themes.backoffice.pages.reserva.create', [
             'cliente' => $cliente,
+            'programas' => $programas,
         ]);
     }
 
@@ -68,7 +69,9 @@ class ReservaController extends Controller
      */
     public function show(Reserva $reserva)
     {
-        //
+        return view('themes.backoffice.pages.reserva.show', [
+            'reserva'=>$reserva
+        ]);
     }
 
     /**

@@ -71,17 +71,27 @@
                             assignment
                         </i>
                         <span class="nav-text">
-                            Reservaciones
+                            Reservas
                         </span>
                     </a>
                 </li>
                 <li class="bold">
                     <a class="waves-effect waves-cyan" href="{{ route ('backoffice.programa.index') }}">
                         <i class="material-icons">
-                            check_circle
+                            redeem
                         </i>
                         <span class="nav-text">
                             Programas
+                        </span>
+                    </a>
+                </li>
+                <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.servicio.index') }}">
+                        <i class="material-icons">
+                            room_service
+                        </i>
+                        <span class="nav-text">
+                            Servicios
                         </span>
                     </a>
                 </li>
@@ -116,6 +126,17 @@
                         </i>
                         <span class="nav-text">
                             Permisos del Sistema
+                        </span>
+                    </a>
+                </li>
+
+                <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.complemento.index') }}">
+                        <i class="material-icons">
+                            data_usage
+                        </i>
+                        <span class="nav-text">
+                            Complementos
                         </span>
                     </a>
                 </li>

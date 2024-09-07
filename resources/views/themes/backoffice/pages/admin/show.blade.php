@@ -1,6 +1,6 @@
 @extends('themes.backoffice.layouts.admin')
 
-@section('tittle','Panel de Administración')
+@section('title','Panel de Administración')
 
 @section('head')
 @endsection

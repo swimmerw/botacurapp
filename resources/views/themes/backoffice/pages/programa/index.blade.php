@@ -1,6 +1,6 @@
 @extends('themes.backoffice.layouts.admin')
 
-@section('tittle','Programas Botacura')
+@section('title','Programas Botacura')
 
 @section('head')
 @endsection

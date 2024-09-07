@@ -1,6 +1,6 @@
 @extends('themes.backoffice.layouts.admin')
 
-@section('tittle','Editar ' . $cliente->nombre_cliente)
+@section('title','Editar ' . $cliente->nombre_cliente)
 
 @section('head')
 @endsection
