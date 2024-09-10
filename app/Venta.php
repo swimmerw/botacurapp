@@ -22,4 +22,19 @@ class Venta extends Model
     {
         return $this->belongsTo(Reserva::class, 'id_reserva');
     }
+
+    public function tipoTransaccionAbono()
+    {
+        return $this->belongsTo(TipoTransaccion::class, 'id_tipo_transaccion_abono');
+    }
+
+    public function tipoTransaccionDiferencia()
+    {
+        return $this->belongsTo(TipoTransaccion::class, 'id_tipo_transaccion_diferencia');
+    }
+
+    public function consumos()
+    {
+        return $this->hasMany(Consumo::class);
+    }
 }

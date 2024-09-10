@@ -112,7 +112,6 @@
       <div class="col s12 m8">
 
 
-
         {{-- TABLA PROGRAMA --}}
         <div id="work-collections">
           <div class="row">
@@ -250,7 +249,11 @@
         @include('themes.backoffice.pages.reserva.includes.venta')
       </div>
 
+      <div class="col s12 m4">
+        @include('themes.backoffice.pages.reserva.includes.consumo')
+      </div>
 
+      @include('themes.backoffice.pages.reserva.includes.modal_venta')
     </div>
 
   </div>
@@ -361,6 +364,58 @@
 
 
 
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.modal');
+      M.Modal.init(elems);
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.tooltipped');
+    var instances = M.Tooltip.init(elems);
+  });
+</script>
+
+<script>
+  $(document).ready(function(){
+$('.modal-trigger').on('click', function(){
+      // Obtener los datos del cliente y la reserva seleccionada
+      var abono = $(this).data('abono') || 0;
+      var abonoImg = $(this).data('abonoimg') || 'https://via.placeholder.com/200x300';
+      var diferencia = $(this).data('diferencia') || 0;
+      var diferenciaImg = $(this).data('diferenciaimg');
+      var descuento = $(this).data('descuento');
+      var totalPagar = $(this).data('totalpagar');
+      var tipoAbono = $(this).data('tipoabono');
+      var tipoDiferencia = $(this).data('tipodiferencia');
+
+      // Insertar los datos en los elementos del modal
+      $('#modalAbono').text(abono);
+      $('#modalDiferencia').text(diferencia);
+      
+      $('#modalAbonoImg').attr('src',abonoImg);
+      $('#modalDiferenciaImg').attr('src',diferenciaImg);
+      
+          // Validar si el descuento es nulo
+          if (descuento == null || descuento == '') {
+            $('#modalDescuento').text('0');
+          } else {
+            $('#modalDescuento').text(descuento + '%');
+          }
+
+
+
+      $('#modalTotalPagar').text(totalPagar);
+      $('#modalTipoAbono').text(tipoAbono);
+      $('#modalTipoDiferencia').text(tipoDiferencia);
+
+  // Abrir el modal
+  var modal = M.Modal.getInstance($('#modalVenta'));
+  modal.open();
+});
+});
 </script>
 
 @endsection

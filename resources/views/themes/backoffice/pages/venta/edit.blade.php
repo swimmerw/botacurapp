@@ -8,6 +8,8 @@
 @section('breadcrumbs')
 <li><a href="{{route('backoffice.reserva.show', $reserva) }}">Ventas asociadas a la reserva del cliente</a></li>
 <li>Crear Venta</li>
+{{-- {{ dd($reserva, $venta, $tipos) }} --}}
+
 @endsection
 
 
@@ -15,19 +17,21 @@
 @section('content')
 
 <div class="section">
-  <p class="caption">Introduce los datos para crear una venta</p>
+  <p class="caption">Introduce los datos para cerrar venta</p>
   <div class="divider"></div>
   <div id="basic-form" class="section">
     <div class="row">
       <div class="col s12 m8 offset-m2 ">
         <div class="card-panel">
-          <h4 class="header">Generar Venta para la reserva de <strong>{{$reserva->cliente->nombre_cliente}}</strong>
+          <h4 class="header">Cerrar Venta para la reserva de <strong>{{$reserva->cliente->nombre_cliente}}</strong>
           </h4>
           <div class="row">
-            <form class="col s12" method="post" enctype="multipart/form-data" action="{{route('backoffice.reserva.venta.store', $reserva)}}">
+            <form class="col s12" method="post" enctype="multipart/form-data"
+              action="{{route('backoffice.reserva.venta.update', ['reserva' => $reserva->id, 'ventum' => $reserva->venta->id])}}">
 
 
               {{csrf_field() }}
+              {{method_field('PUT')}}
 
 
 
@@ -42,7 +46,7 @@
 
                   <label for="abono_programa">Cantidad de Abono</label>
                   <input id="abono_programa" type="text" name="abono_programa" class=""
-                    value="{{ old('abono_programa') }}">
+                    value="{{ old('abono_programa') ?? $reserva->venta->abono_programa}}" readonly>
                   @error('abono_programa')
                   <span class="invalid-feedback" role="alert">
                     <strong style="color:red">{{ $message }}</strong>
@@ -68,8 +72,9 @@
 
 
                 <div class="input-field col s12 m4">
-                  <select name="id_tipo_transaccion_abono" id="id_tipo_transaccion_abono">
-                    <option value="" disabled selected>-- Seleccione --</option>
+                  <select name="id_tipo_transaccion_abono" id="id_tipo_transaccion_abono" >
+                    <option value="{{$reserva->venta->id_tipo_transaccion_abono}}" disabled selected>
+                      {{$reserva->venta->tipoTransaccionAbono->nombre}}</option>
                     @foreach ($tipos as $tipo)
                     <option value="{{$tipo->id}}">{{$tipo->nombre}}</option>
                     @endforeach
@@ -134,7 +139,7 @@
 
               <div class="row">
 
-                <div class="input-field col s12 m3">
+                {{-- <div class="input-field col s12 m3">
 
                   <label for="descuento">Descuento</label>
                   <input id="descuento" type="number" name="descuento" class="" value="{{ old('descuento') }}">
@@ -144,13 +149,13 @@
                   </span>
                   @enderror
 
-                </div>
+                </div> --}}
 
                 <div class="input-field col s12 m3">
 
                   <label for="total_pagar">Total a pagar</label>
                   <input id="total_pagar" type="text" name="total_pagar" class=""
-                    value="{{ $reserva->programa->valor_programa * $reserva->cantidad_personas }}" readonly>
+                    value="{{$reserva->venta->total_pagar}}" readonly>
                   @error('total_pagar')
                   <span class="invalid-feedback" role="alert">
                     <strong style="color:red">{{ $message }}</strong>
@@ -165,13 +170,13 @@
               <div class="row">
                 <div class="input-field col s12 m6">
                   <label for="imagenSeleccionadaAbono">Imagen Abono</label>
-                  <img class="center-text" id="imagenSeleccionadaAbono" src="https://via.placeholder.com/200x300" alt=""
+                  <img class="center-text" id="imagenSeleccionadaAbono" src="{{$reserva->venta->imagen_abono ? route('backoffice.reserva.abono.imagen', $reserva->id) : '/images/gallary/no-image.png'}}" alt=""
                     style="max-height: 200px">
                 </div>
 
                 <div class="input-field col s12 m6">
                   <label for="imagenSeleccionadaDiferencia">Imagen Diferencia</label>
-                  <img class="center-text" id="imagenSeleccionadaDiferencia" src="https://via.placeholder.com/200x300"
+                  <img class="center-text" id="imagenSeleccionadaDiferencia" src="/images/gallary/no-image.png"
                     alt="" style="max-height: 200px">
                 </div>
               </div>
@@ -219,60 +224,25 @@
 </script>
 
 <script>
-    const total = document.getElementById('total_pagar');
-    const abonoInput = document.getElementById('abono_programa');
-    const diferenciaInput = document.getElementById('diferencia_programa');
-    const descuentoInput = document.getElementById('descuento');
-
-// Almacenar el valor inicial del total
-let totalInicial = total.value || 0;
-let totalConDescuento = totalInicial; // Almacenar el total con descuento para cálculos futuros
-let valorAbonoAnterior = 0;
-let valorDiferenciaAnterior = 0;
-let valorDescuentoAnterior = 0;
-
-// Guardamos el valor original cuando el usuario hace foco en los inputs
-abonoInput.addEventListener("focus", () => {
-  valorAbonoAnterior = abonoInput.value || 0;
-});
-
-diferenciaInput.addEventListener("focus", () => {
-  valorDiferenciaAnterior = diferenciaInput.value || 0;
-});
-
-descuentoInput.addEventListener("focus", () => {
-  valorDescuentoAnterior = descuentoInput.value || 0;
-});
-
-// Función para actualizar el valor de total_pagar cuando se ingresa el abono
-abonoInput.addEventListener("input", (e) => {
-  const abono = e.target.value || valorAbonoAnterior; // Usamos el valor anterior si el campo está vacío
-  const diferenciaValor = totalConDescuento - abono; // Restamos el abono del total con descuento
-  
-  // Actualizamos el campo total_pagar para mostrar lo que falta por pagar
-  total.value = diferenciaValor; // Mostramos la diferencia
-});
-
-// Función para actualizar el valor de total_pagar cuando se ingresa la diferencia
-diferenciaInput.addEventListener("input", (e) => {
-  const diferencia = e.target.value || valorDiferenciaAnterior; // Usamos el valor anterior si el campo está vacío
-  const nuevoTotal = total.value - diferencia;
-
-  // Si la diferencia paga lo que falta, ponemos total en 0
-  total.value = (nuevoTotal <= 0) ? 0 : nuevoTotal; // Actualizamos el total
-});
-
-// Función para aplicar el descuento
-descuentoInput.addEventListener("input", (e) => {
-  const obtenerDescuento = e.target.value || valorDescuentoAnterior; // Usamos el valor anterior si el campo está vacío
-  const descuento = obtenerDescuento / 100;
-  
-  const calculo = totalInicial * descuento;
-  totalConDescuento = totalInicial - calculo; // Guardamos el total con descuento
-
-  total.value = totalConDescuento; // Actualizamos el total con el descuento aplicado
-});
+  var total = 0;
+    var diferenciaInput = 0;
     
+    $(document).ready(function(){
+      total = $('#total_pagar').val();
+      calcularTotal();
+    })
+
+    $('#diferencia_programa').change(function () { 
+      diferenciaInput = $('#diferencia_programa').val();
+      calcularTotal();
+     })
+    
+
+    function calcularTotal() {
+      
+      $('#total_pagar').val(total-diferenciaInput);
+      
+    }
 
 </script>
 @endsection

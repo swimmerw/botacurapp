@@ -131,6 +131,17 @@
                 </li>
 
                 <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.insumo.index') }}">
+                        <i class="material-icons">
+                            store
+                        </i>
+                        <span class="nav-text">
+                            Insumos
+                        </span>
+                    </a>
+                </li>
+
+                <li class="bold">
                     <a class="waves-effect waves-cyan" href="{{ route ('backoffice.complemento.index') }}">
                         <i class="material-icons">
                             data_usage

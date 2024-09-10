@@ -31,13 +31,13 @@ class VentaController extends Controller
      */
     public function create($reserva)
     {
-        $reserva = Reserva::findOrFail($reserva);
-        $tipos = TipoTransaccion::all();
+        // $reserva = Reserva::findOrFail($reserva);
+        // $tipos = TipoTransaccion::all();
 
-        return view('themes.backoffice.pages.venta.create', [
-            'reserva' => $reserva,
-            'tipos' => $tipos,
-        ]);
+        // return view('themes.backoffice.pages.venta.create', [
+        //     'reserva' => $reserva,
+        //     'tipos' => $tipos,
+        // ]);
     }
 
     /**
@@ -50,38 +50,38 @@ class VentaController extends Controller
     {
         // dd($request);
 
-        $url_abono = null;
-        $url_diferencia = null;
+        // $url_abono = null;
+        // $url_diferencia = null;
         
-        if($request->hasfile('imagen_abono')){
-            $abono = $request->file('imagen_abono');
-            $filename = time().'-'.$abono->getClientOriginalName();
-            Storage::disk('imagen_abono')->put($filename, File::get($abono));
-            $url_abono = $filename;
-        }
+        // if($request->hasfile('imagen_abono')){
+        //     $abono = $request->file('imagen_abono');
+        //     $filename = time().'-'.$abono->getClientOriginalName();
+        //     Storage::disk('imagen_abono')->put($filename, File::get($abono));
+        //     $url_abono = $filename;
+        // }
 
-        if($request->hasfile('imagen_diferencia')){
-            $diferencia = $request->file('imagen_diferencia');
-            $filename = time().'-'.$diferencia->getClientOriginalName();
-            Storage::disk('imagen_diferencia')->put($filename, File::get($diferencia));
-            $url_diferencia = $filename;
-        }
+        // if($request->hasfile('imagen_diferencia')){
+        //     $diferencia = $request->file('imagen_diferencia');
+        //     $filename = time().'-'.$diferencia->getClientOriginalName();
+        //     Storage::disk('imagen_diferencia')->put($filename, File::get($diferencia));
+        //     $url_diferencia = $filename;
+        // }
 
 
-        $venta = Venta::create([
-            'abono_programa' => $request->input('abono_programa'),
-            'imagen_abono' => $url_abono,
-            'diferencia_programa' => $request->input('diferencia_programa'),
-            'imagen_diferencia' => $url_diferencia,
-            'descuento' => $request->input('descuento'),
-            'total_pagar' => $request->input('total_pagar'),
-            'id_reserva' => $request->input('id_reserva'),
-            'id_tipo_transaccion_abono' => $request->input('id_tipo_transaccion_abono'),
-            'id_tipo_transaccion_diferencia' => $request->input('id_tipo_transaccion_diferencia'),
-        ]);
+        // $venta = Venta::create([
+        //     'abono_programa' => $request->input('abono_programa'),
+        //     'imagen_abono' => $url_abono,
+        //     'diferencia_programa' => $request->input('diferencia_programa'),
+        //     'imagen_diferencia' => $url_diferencia,
+        //     'descuento' => $request->input('descuento'),
+        //     'total_pagar' => $request->input('total_pagar'),
+        //     'id_reserva' => $request->input('id_reserva'),
+        //     'id_tipo_transaccion_abono' => $request->input('id_tipo_transaccion_abono'),
+        //     'id_tipo_transaccion_diferencia' => $request->input('id_tipo_transaccion_diferencia'),
+        // ]);
 
-        Alert::success('Éxito', 'Se ha generado la venta')->showConfirmButton('Confirmar');
-        return redirect()->route('backoffice.reserva.show', ['reserva' => $reserva]);
+        // Alert::success('Éxito', 'Se ha generado la venta')->showConfirmButton('Confirmar');
+        // return redirect()->route('backoffice.reserva.show', ['reserva' => $reserva]);
     }
 
     /**
@@ -101,9 +101,18 @@ class VentaController extends Controller
      * @param  \App\Venta  $venta
      * @return \Illuminate\Http\Response
      */
-    public function edit(Venta $venta)
+    public function edit(Venta $venta, Reserva $reserva)
     {
-        //
+        // $reserva = Reserva::findOrFail($reserva);
+        // $reserva->Reserva::with('cliente')->get();
+        $reserva->load('cliente'); 
+        $tipos = TipoTransaccion::all();
+
+        return view('themes.backoffice.pages.venta.edit', [
+            'reserva' => $reserva,
+            'tipos' => $tipos,
+            'venta' => $venta
+        ]);
     }
 
     /**

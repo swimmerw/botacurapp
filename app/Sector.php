@@ -19,6 +19,11 @@ public function tiposProductos()
     return $this->hasMany('App\TipoProducto');
 }
 
+public function insumos()
+{
+    return $this->hasMany(Insumo::class, 'id_sector');
+}
+
 // public function reservaciones()
 // {
 //     return $this->belongsToMany('App\Reserva');

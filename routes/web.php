@@ -1,6 +1,7 @@
 <?php
 
 use App\CategoriaCompra;
+use App\Consumo;
 use App\Sector;
 use App\TipoDocumento;
 use App\TipoProducto;
@@ -41,34 +42,36 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::resource('user', 'UserController');
     Route::get('user/{user}/assign_role', 'UserController@assign_role')->name('user.assign_role');
     Route::post('user/{user}/role_assignment', 'UserController@role_assignment')->name('user.role_assignment');
-
+    
     Route::get('user/{user}/assign_permission', 'UserController@assign_permission')->name('user.assign_permission');
     Route::post('user/{user}/permission_assignment', 'UserController@permission_assignment')->name('user.permission_assignment');
-
+    
     // Metodos Reservas
     // Index - Mostrar una lista de reservas
     Route::get('reserva', 'ReservaController@index')->name('reserva.index');
-
+    
     // Create - Ingresa al formulario para nueva reserva
     Route::get('reserva/create/{cliente}', 'ReservaController@create')->name('reserva.create');
-
+    
     // Store - Guardar la nueva reserva
     Route::post('reserva', 'ReservaController@store')->name('reserva.store');
-
+    
     // Show - Mostrar una reserva específica
     Route::get('reserva/{reserva}', 'ReservaController@show')->name('reserva.show');
-
+    
     // Edit - Mostrar el formulario para editar una reserva
     // Route::get('reserva/{id}/edit', 'ReservaController@edit')->name('reserva.edit');
-
+    
     Route::get('reserva/{reserva}/edit', 'ReservaController@edit')->name('reserva.edit');
-
+    
     // Update - Actualizar una reserva específica
     Route::put('reserva/{reserva}', 'ReservaController@update')->name('reserva.update');
-
+    
     Route::delete('reserva/{reserva}', 'ReservaController@destroy')->name('reserva.destroy');
-
-
+    
+    
+    Route::get('reserva/{reserva}/abono', 'ReservaController@showAbonoImage')->name('reserva.abono.imagen');
+    Route::get('reserva/{reserva}/diferencia', 'ReservaController@showDiferenciaImage')->name('reserva.diferencia.imagen');
 
 
     // Metodos Complementos CREAR
@@ -144,9 +147,11 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
         return view('themes.backoffice.pages.tipo_producto.edit', compact('producto'));
     })->name('tipo_producto.edit');
 
+
     Route::resource('role', 'RoleController');
     Route::resource('permission', 'PermissionController');
     Route::resource('programa', 'ProgramaController');
+    Route::resource('insumo', 'InsumoController');
     Route::resource('servicio', 'ServicioController');
     Route::resource('cliente', 'ClienteController');
     Route::resource('complemento', 'ComplementoController');
@@ -154,4 +159,5 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::resource('reserva.visitas', 'VisitaController');
     Route::resource('visita', 'VisitaController');
     Route::resource('reserva.venta', 'VentaController');
+    Route::resource('venta.consumo', 'ConsumoController');
 });
