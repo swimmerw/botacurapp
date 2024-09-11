@@ -15,8 +15,10 @@
                 </ul>
 
                 <div class="header-search-wrapper hide-on-med-and-down">
+                    <form action="" class="">
                     <i class="material-icons">search</i>
-                    <input class="header-search-input z-depth-2" name="Search" placeholder="¿Qué deseas buscar?" type="text"/>
+                    <input class="header-search-input z-depth-2" name="search" placeholder="¿Qué deseas buscar?" type="text"/>
+                    </form>
                 </div>
 
                 <ul class="right hide-on-med-and-down">
@@ -26,7 +28,6 @@
                             <i class="material-icons">settings_overscan</i>
                         </a>
                     </li>
-                   
                     <li>
                         <a class="waves-effect waves-block waves-light profile-button" data-activates="profile-dropdown" href="javascript:void(0);">
                             <span class="avatar-status avatar-online">

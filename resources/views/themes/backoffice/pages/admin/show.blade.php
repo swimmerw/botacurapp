@@ -31,7 +31,7 @@
                             <div class="row mt-1">
                                 <!-- Tarjeta para mostrar el número de Reservas -->
                                 <div class="col s12 m6 l3">
-                                    <div class="card gradient-45deg-light-blue-cyan gradient-shadow min-height-100 white-text">
+                                    <div class="animate__animated animate__backInLeft card gradient-45deg-light-blue-cyan gradient-shadow min-height-100 white-text" style="--animate-delay: 1s; --animate-duration: 2s; ">
                                         <div class="padding-4">
                                             <div class="col s7 m7">
                                                 <i class="material-icons background-round mt-5">assignment</i>
@@ -47,7 +47,7 @@
                         
                                 <!-- Tarjeta para mostrar el número de Clientes -->
                                 <div class="col s12 m6 l3">
-                                    <div class="card gradient-45deg-red-pink gradient-shadow min-height-100 white-text">
+                                    <div class="animate__animated animate__backInLeft card gradient-45deg-red-pink gradient-shadow min-height-100 white-text" style="--animate-delay: 1s; --animate-duration: 2s;">
                                         <div class="padding-4">
                                             <div class="col s7 m7">
                                                 <i class="material-icons background-round mt-5">airport_shuttle</i>
@@ -109,4 +109,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
+
+@if($insumosCriticos->isNotEmpty())
+{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            title: 'Stock Crítico',
+            icon: 'error',
+            html: `
+                <ul>
+                    @foreach ($insumosCriticos as $insumo)
+                        <li>{{ $insumo->nombre }}: {{ $insumo->cantidad }} unidades (Stock crítico: {{ $insumo->stock_critico }})</li>
+                    @endforeach
+                </ul>
+            `,
+            confirmButtonText: 'Aceptar',
+        });
+    });
+</script>
+@endif
 @endsection

@@ -18,12 +18,17 @@ class Producto extends Model
     public function insumos()
     {
         return $this->belongsToMany(Insumo::class, 'insumo_producto')
-                    ->withPivot('cantidad_insumo_usar', 'total_costo_producto', 'utilidad_producto')
+                    ->withPivot('cantidad_insumo_usar', 'id_unidad_medida', 'total_costo_producto', 'utilidad_producto')
                     ->withTimestamps();
     }
 
     public function detallesConsumos()
     {
         return $this->hasMany(DetalleConsumo::class, 'id_producto');
+    }
+
+    public function tipoProducto()
+    {
+        return $this->belongsTo(TipoProducto::class , 'id_producto', 'id');
     }
 }

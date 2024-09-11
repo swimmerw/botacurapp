@@ -24,6 +24,11 @@ class UnidadMedida extends Model
 //     return $this->belongsToMany('App\Reserva');
 // }
 
+public function insumos()
+{
+    return $this->hasMany(Insumo::class, 'id_unidad_medida');
+}
+
 //ALMACENAMIENTO
 
 //VALIDACION

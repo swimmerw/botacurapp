@@ -14,8 +14,25 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request){
+            $query = trim($request->get('search'));
+
+            $clientes = Cliente::where('nombre_cliente', 'LIKE', '%' . $query . '%')
+                                ->orWhere('whatsapp_cliente', 'LIKE', '%' . $query . '%')
+                                ->orWhere('instagram_cliente', 'LIKE', '%' . $query . '%')
+                                ->orWhere('correo', 'LIKE', '%' . $query . '%')
+                                ->orderBy('id','asc')->get();
+
+            return view('themes.backoffice.pages.cliente.index', [
+                'clientes' => $clientes,
+                'search' => $query,
+            ]);
+
+        }
+
+
         return view('themes.backoffice.pages.cliente.index', [
             'clientes' => Cliente::all(),
         ]);

@@ -148,16 +148,17 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     })->name('tipo_producto.edit');
 
 
-    Route::resource('role', 'RoleController');
-    Route::resource('permission', 'PermissionController');
-    Route::resource('programa', 'ProgramaController');
-    Route::resource('insumo', 'InsumoController');
-    Route::resource('servicio', 'ServicioController');
     Route::resource('cliente', 'ClienteController');
     Route::resource('complemento', 'ComplementoController');
+    Route::resource('insumo', 'InsumoController');
+    Route::resource('permission', 'PermissionController');
+    Route::resource('producto', 'ProductoController');
+    Route::resource('programa', 'ProgramaController');
     Route::resource('reserva.reagendamientos', 'ReagendamientoController');
-    Route::resource('reserva.visitas', 'VisitaController');
-    Route::resource('visita', 'VisitaController');
     Route::resource('reserva.venta', 'VentaController');
+    Route::resource('reserva.visitas', 'VisitaController');
+    Route::resource('role', 'RoleController');
+    Route::resource('servicio', 'ServicioController');
     Route::resource('venta.consumo', 'ConsumoController');
+    Route::resource('visita', 'VisitaController');
 });

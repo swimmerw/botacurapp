@@ -19,10 +19,10 @@ public function sector()
     return $this->belongsTo(Sector::class , 'id_sector', 'id');
 }
 
-// public function productos()
-// {
-//     return $this->hasMany(Producto::class, 'id_tipo_producto', 'id');
-// }
+public function productos()
+{
+    return $this->hasMany(Producto::class, 'id_tipo_producto', 'id');
+}
 
 
 

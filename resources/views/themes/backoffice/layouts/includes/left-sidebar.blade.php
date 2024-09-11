@@ -142,6 +142,17 @@
                 </li>
 
                 <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.producto.index') }}">
+                        <i class="material-icons">
+                            shopping_basket
+                        </i>
+                        <span class="nav-text">
+                            Productos
+                        </span>
+                    </a>
+                </li>
+
+                <li class="bold">
                     <a class="waves-effect waves-cyan" href="{{ route ('backoffice.complemento.index') }}">
                         <i class="material-icons">
                             data_usage
