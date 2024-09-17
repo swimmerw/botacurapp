@@ -14,14 +14,14 @@ class Insumo extends Model
         'cantidad',
         'stock_critico',
         'id_unidad_medida',
-        'id_sector'
+        'id_sector',
     ];
 
     public function productos()
     {
-        return $this->belongsToMany(Producto::class, 'insumo_producto')
-                    ->withPivot('cantidad_insumo_usar', 'id_unidad_medida', 'total_costo_producto', 'utilidad_producto')
-                    ->withTimestamps();
+        return $this->belongsToMany(Producto::class, 'insumo_producto', 'id_producto', 'id_insumo')
+            ->withPivot('cantidad_insumo_usar', 'id_unidad_medida', 'total_costo_producto', 'utilidad_producto')
+            ->withTimestamps();
     }
 
     public function sector()
@@ -31,6 +31,18 @@ class Insumo extends Model
 
     public function unidadMedida()
     {
-        return $this->belongsTo(UnidadMedida::class, 'id_unidad_medida');
+        return $this->belongsTo(UnidadMedida::class, 'id_unidad_medida', 'id');
     }
+
+    public function unidadMedidaPivot()
+    {
+        return $this->belongsTo(UnidadMedida::class, 'id_unidad_medida', 'id');
+    }
+
+    public function nombreUnidadMedida()
+    {
+        $unidadMedida = UnidadMedida::find($this->pivot->id_unidad_medida);
+        return $unidadMedida ? $unidadMedida->nombre : 'No disponible';
+    }
+
 }

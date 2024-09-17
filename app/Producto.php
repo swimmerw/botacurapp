@@ -17,8 +17,8 @@ class Producto extends Model
 
     public function insumos()
     {
-        return $this->belongsToMany(Insumo::class, 'insumo_producto')
-                    ->withPivot('cantidad_insumo_usar', 'id_unidad_medida', 'total_costo_producto', 'utilidad_producto')
+        return $this->belongsToMany(Insumo::class, 'insumo_producto', 'id_producto', 'id_insumo')
+                    ->withPivot('id_unidad_medida', 'cantidad_insumo_usar', 'total_costo_producto', 'utilidad_producto')
                     ->withTimestamps();
     }
 
@@ -29,6 +29,6 @@ class Producto extends Model
 
     public function tipoProducto()
     {
-        return $this->belongsTo(TipoProducto::class , 'id_producto', 'id');
+        return $this->belongsTo(TipoProducto::class , 'id_tipo_producto', 'id');
     }
 }

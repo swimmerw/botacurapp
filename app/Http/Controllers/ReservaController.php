@@ -50,6 +50,7 @@ class ReservaController extends Controller
         $programas = Programa::all();
         $tipos = TipoTransaccion::all();
 
+
         return view('themes.backoffice.pages.reserva.create', [
             'cliente' => $cliente,
             'programas' => $programas,
@@ -119,6 +120,8 @@ class ReservaController extends Controller
      */
     public function show(Reserva $reserva)
     {
+        $reserva->load('venta.consumos.detallesConsumos.producto');
+        
         return view('themes.backoffice.pages.reserva.show', [
             'reserva' => $reserva,
         ]);

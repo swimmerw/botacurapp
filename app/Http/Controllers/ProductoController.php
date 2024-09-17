@@ -7,6 +7,7 @@ use App\Producto;
 use App\TipoProducto;
 use App\UnidadMedida;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductoController extends Controller
 {
@@ -17,10 +18,8 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        $tipos = TipoProducto::all();
-        $productos = Producto::all();
-        $unidades = UnidadMedida::all();
-        return view('themes.backoffice.pages.producto.index', compact('productos', 'tipos', 'unidades'));
+        $productos = Producto::with('tipoProducto')->get();
+        return view('themes.backoffice.pages.producto.index', compact('productos'));
     }
 
     /**
@@ -47,7 +46,7 @@ class ProductoController extends Controller
 
         $validatedData = $request->validate([
             'nombre' => 'required|string|max:150',
-            'valor' => 'required|integer|max:6',
+            'valor' => 'required|integer|max:99999',
             'id_tipo_producto' => 'required|integer|exists:tipos_productos,id',
             'insumos.*.id_insumo' => 'required|integer|exists:insumos,id',
             'insumos.*.cantidad_insumo_usar' => 'required|numeric|min:1',
@@ -56,6 +55,7 @@ class ProductoController extends Controller
             'nombre.required' => 'El campo Nombre es requerido',
             'nombre.max' => 'El nombre excede la cantidad de caracteres permitidos',
             'valor.required' => 'El campo Valor es requerido',
+            'valor.max' => 'El valor excede la cantidad de caracteres permitidos',
             'id_tipo_producto.required' => 'El campo Tipo Producto es requerido',
             'id_tipo_producto.integer' => 'El campo Tipo Producto debe ser de tipo Numerico',
             'id_tipo_producto.exists' => 'Tipo Producto seleccionado, no existe',
@@ -66,10 +66,11 @@ class ProductoController extends Controller
             'insumos.*.id_unidad_medida.required' => 'La unidad de medida es requerida',
         ]);
 
-        // $producto = Producto::create([
-        //     'nombre' => $validatedData['nombre'],
-        //     'id_tipo_producto' => $validatedData['id_tipo_producto'],
-        // ]);
+        $producto = Producto::create([
+            'nombre' => $validatedData['nombre'],
+            'valor' => $validatedData['valor'],
+            'id_tipo_producto' => $validatedData['id_tipo_producto'],
+        ]);
 
         $valorProducto = 0;
         $utilidad = 0;
@@ -78,24 +79,24 @@ class ProductoController extends Controller
             // Obtener los insumos con sus datos filtrando por los seleccionados
             $insumo = Insumo::find($insumoData['id_insumo']);
             // Calcular la utilidad del insumo en la cantidad de productos
-            $utilidad_producto = $this->calcularUtilidad($insumoData['cantidad_insumo_usar'], $insumoData['id_unidad_medida']);
+            $utilidad_producto = $this->calcularUtilidad($insumoData['cantidad_insumo_usar'], $insumo->id_unidad_medida);
 
-            // Realizar los cálculos de acuerdo a la unidad de medida
-            switch ($insumoData['id_unidad_medida']) {
-                case 1: // ID de litros en la unidad de medida
-                    $utilidad = 1000 / $insumoData['cantidad_insumo_usar']; // Litros a mililitros
-                    break;
-                case 2: // ID de kilos en la unidad de medida
-                    $utilidad = 1000 / $insumoData['cantidad_insumo_usar']; // Kilos a gramos
-                    break;
-                default:
-                    // Para otras unidades de medida, simplemente retorna la cantidad de insumo
-                    $utilidad = $insumoData['cantidad_insumo_usar'];
-                    break;
-            }
+            // // Realizar los cálculos de acuerdo a la unidad de medida
+            // switch ($insumo->id_unidad_medida) {
+            //     case 1: // ID de litros en la unidad de medida
+            //         $utilidad = 1000 / $insumoData['cantidad_insumo_usar']; // Litros a mililitros
+            //         break;
+            //     case 2: // ID de kilos en la unidad de medida
+            //         $utilidad = 1000 / $insumoData['cantidad_insumo_usar']; // Kilos a gramos
+            //         break;
+            //     default:
+            //         // Para otras unidades de medida, simplemente retorna la cantidad de insumo
+            //         $utilidad = $insumoData['cantidad_insumo_usar'];
+            //         break;
+            // }
 
             // Calcular el costo total del insumo en el producto
-            $total_costo_producto = $insumo->valor / $utilidad;
+            $total_costo_producto = $insumo->valor / $utilidad_producto;
 
             // Redondear el número hacia arriba
             $total_costo_producto = ceil($total_costo_producto);
@@ -105,17 +106,19 @@ class ProductoController extends Controller
 
 
 
-            // $producto->insumos()->attach($insumoData['id_insumo'], [
-            //     'cantidad_insumo_usar' => $insumoData['cantidad_insumo_usar'],
-            //     'id_unidad_medida' => $insumoData['id_unidad_medida'],
-            //     'total_costo_producto' => intval($total_costo_producto),
-            //     'utilidad_producto' => $utilidad_producto,
-            // ]);
+            $producto->insumos()->attach(
+                 $insumoData['id_insumo'], [
+                'cantidad_insumo_usar' => $insumoData['cantidad_insumo_usar'],
+                'id_unidad_medida' => $insumoData['id_unidad_medida'],
+                'total_costo_producto' => intval($total_costo_producto),
+                'utilidad_producto' => $utilidad_producto,
+            ]);
 
 
-            dd($total_costo_producto);
         }
 
+        Alert::success('Éxito', 'Se ha generado el producto con sus insumos')->showConfirmButton();
+        return redirect()->route('backoffice.producto.show', $producto);
     }
 
     private function calcularUtilidad($cantidad_usar, $unidad_medida_id)
@@ -136,7 +139,13 @@ class ProductoController extends Controller
 
     public function show(Producto $producto)
     {
-        //
+        $producto = Producto::with(['tipoProducto','insumos.unidadMedidaPivot'])->findOrFail($producto->id);
+
+        $totalCostoProducto = $producto->insumos->sum(function($insumo){
+            return $insumo->pivot->total_costo_producto;          
+        });
+
+        return view('themes.backoffice.pages.producto.show', compact('producto', 'totalCostoProducto'));
     }
 
     public function edit(Producto $producto)

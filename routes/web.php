@@ -10,6 +10,7 @@ use App\Ubicacion;
 use App\UnidadMedida;
 use App\Venta;
 use App\Http\Controllers\ReservaController;
+use App\Http\Controllers\ConsumoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -146,6 +147,23 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
         $producto = TipoProducto::findOrFail($id);
         return view('themes.backoffice.pages.tipo_producto.edit', compact('producto'));
     })->name('tipo_producto.edit');
+
+
+
+    // Metodos Reservas
+    // Index - Mostrar una lista de reservas
+    Route::get('venta/{venta}/consumo', 'ConsumoController@create_service')->name('venta.consumo.create_service');
+    // Route::get('reserva/{reserva}/diferencia', 'ReservaController@showDiferenciaImage')->name('reserva.diferencia.imagen');
+    
+    // // Create - Ingresa al formulario para nueva reserva
+    // Route::get('reserva/create/{cliente}', 'ReservaController@create')->name('reserva.create');
+    
+    // // Store - Guardar la nueva reserva
+    // Route::post('reserva', 'ReservaController@store')->name('reserva.store');
+    
+    // // Show - Mostrar una reserva específica
+    // Route::get('reserva/{reserva}', 'ReservaController@show')->name('reserva.show');
+
 
 
     Route::resource('cliente', 'ClienteController');

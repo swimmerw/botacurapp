@@ -35,6 +35,6 @@ class Venta extends Model
 
     public function consumos()
     {
-        return $this->hasMany(Consumo::class);
+        return $this->hasMany(Consumo::class, 'id_venta');
     }
 }
