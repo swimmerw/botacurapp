@@ -11,7 +11,7 @@
 @endsection
 
 @section('dropdown_settings')
-<li><a href="{{ route('backoffice.reserva.create',$producto->id) }}" class="grey-text text-darken-2">Crear Producto</a>
+<li><a href="{{ route('backoffice.producto.create') }}" class="grey-text text-darken-2">Crear Producto</a>
 </li>
 @endsection
 

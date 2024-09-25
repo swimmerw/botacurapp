@@ -103,10 +103,10 @@ class VentaController extends Controller
      */
     public function edit(Venta $venta, Reserva $reserva)
     {
-        // $reserva = Reserva::findOrFail($reserva);
-        // $reserva->Reserva::with('cliente')->get();
-        $reserva->load('cliente'); 
+        $reserva->load('cliente', 'venta.tipoTransaccionAbono'); 
         $tipos = TipoTransaccion::all();
+
+        // dd($reserva);
 
         return view('themes.backoffice.pages.venta.edit', [
             'reserva' => $reserva,

@@ -37,34 +37,73 @@
                                     <input id="id_reserva" type="hidden" class="form-control" name="id_reserva"
                                         value="{{$reserva->id}}" required>
                                 </div>
-                                <div class="input-field col s12 m6 l4" @if(!in_array('Sauna', $servicios)) hidden @endif>
 
-                                    <label for="horario_sauna">Horario Sauna</label>
-                                    <input id="horario_sauna" type="text" name="horario_sauna" class="timepicker"
-                                        value="{{ old('horario_sauna') }}" placeholder="" @if(!in_array('Sauna', $servicios)) disabled hidden @endif>
+
+
+                                <div class="input-field col s12 m6 l4">
+                                    <select name="horario_sauna" id="horario_sauna">
+                                        <option value="" selected disabled="">-- Seleccione --</option>
+                                        @foreach($horarios as $horario)
+                                        <option value="{{ $horario }}" {{ old('horario_sauna')==$horario ? 'selected'
+                                            : '' }}>
+                                            {{ $horario }}
+                                        </option>
+                                        @endforeach
+                                    </select>
                                     @error('horario_sauna')
                                     <span class="invalid-feedback" role="alert">
                                         <strong style="color:red">{{ $message }}</strong>
                                     </span>
                                     @enderror
+                                    <label for="horario_sauna">Horario SPA</label>
                                 </div>
 
-                                <div class="input-field col s12 m6 l4" @if(!in_array('Tinaja', $servicios)) hidden @endif>
+
+
+                                {{-- <div class="input-field col s12 m6 l4" @if(!in_array('Sauna', $servicios)) hidden
+                                    @endif>
+
+                                    <input id="horario_sauna" type="text" name="horario_sauna" class="timepicker"
+                                        value="{{ old('horario_sauna') }}" placeholder="" @if(!in_array('Sauna',
+                                        $servicios)) disabled hidden @endif>
+                                    <label for="horario_sauna">Horario SPA</label>
+                                    @error('horario_sauna')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong style="color:red">{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div> --}}
+
+                                {{-- <div class="input-field col s12 m6 l4" @if(!in_array('Tinaja', $servicios)) hidden
+                                    @endif>
 
                                     <label for="horario_tinaja">Horario Tinaja</label>
                                     <input id="horario_tinaja" type="text" name="horario_tinaja" class="timepicker"
-                                        value="{{ old('horario_tinaja') }}" placeholder="" @if(!in_array('Tinaja', $servicios)) disabled hidden @endif>
+                                        value="{{ old('horario_tinaja') }}" placeholder="" @if(!in_array('Tinaja',
+                                        $servicios)) disabled hidden @endif>
                                     @error('horario_tinaja')
                                     <span class="invalid-feedback" role="alert">
                                         <strong style="color:red">{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                </div>
-                                <div class="input-field col s12 m6 l4" @if(!in_array('Masaje', $servicios)) hidden @endif>
+                                </div> --}}
 
+                                <div class="input-field col s12 m6 l4" @if(!in_array('Masaje', $servicios)) hidden
+                                    @endif>
+
+                                    <select id="horario_masaje" name="horario_masaje" @if(!in_array('Masaje',
+                                        $servicios)) disabled hidden @endif>
+
+                                        <option value="" selected disabled="">-- Seleccione --</option>
+                                        @foreach($horasMasaje as $horario)
+                                        <option value="{{ $horario }}" {{ old('horario_sauna')==$horario ? 'selected'
+                                            : '' }}>
+                                            {{ $horario }}
+                                        </option>
+                                        @endforeach
+
+                                    </select>
                                     <label for="horario_masaje">Horario Masaje</label>
-                                    <input id="horario_masaje" type="text" name="horario_masaje" class="timepicker"
-                                        value="{{ old('horario_masaje') }}" placeholder="" @if(!in_array('Masaje', $servicios)) disabled hidden @endif>
                                     @error('horario_masaje')
                                     <span class="invalid-feedback" role="alert">
                                         <strong style="color:red">{{ $message }}</strong>
@@ -139,27 +178,97 @@
                                     <label for="trago_cortesia">Trago cortesia</label>
                                     <p>
                                         <label>
-                                            <input name="trago_cortesia" id="trago_cortesia" type="radio" class="with-gap" value="Si" />
+                                            <input name="trago_cortesia" id="trago_cortesia" type="radio"
+                                                class="with-gap" value="Si" />
                                             <span>Si</span>
                                         </label>
-                                    
+
                                         <label>
-                                            <input name="trago_cortesia" id="trago_cortesia" type="radio" class="with-gap" value="No" checked/>
+                                            <input name="trago_cortesia" id="trago_cortesia" type="radio"
+                                                class="with-gap" value="No" checked />
                                             <span>No</span>
                                         </label>
                                     </p>
-                                    {{-- <select name="trago_cortesia" id="trago_cortesia">
-                                        <option value="Si">Si</option>
-                                        <option value="No" selected>No</option>
-                                    </select> --}}
 
                                     @error('trago_cortesia')
                                     <span class="invalid-feedback" role="alert">
                                         <strong style="color:red">{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                    
+
                                 </div>
+
+
+
+                            </div>
+
+                            <div class="row"><br></div>
+
+                            <div class="row">
+                                <h6><strong> Menús por asistente</strong></h6>
+                                {{-- GENERAR 3 selects por cantidad_personas en tabla reservas --}}
+                                @for ($i = 1; $i <= $reserva->cantidad_personas; $i++)
+
+                                    <div class="input-field col s12 m6 l3">
+                                        <select name="menus[{{ $i }}][id_producto_entrada]"
+                                            id="id_producto_entrada_{{ $i }}">
+                                            <option value="" disabled selected> -- Seleccione --</option>
+                                            @foreach ($entradas as $entrada)
+                                                <option value="{{$entrada->id}}">{{$entrada->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('id_producto_entrada')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong style="color:red">{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                        <label for="id_producto_entrada_{{ $i }}">Entrada</label>
+                                    </div>
+
+
+
+                                    <div class="input-field col s12 m6 l3">
+                                        <select name="menus[{{$i}}][id_producto_fondo]" id="id_producto_fondo_{{$i}}">
+                                            <option value="" disabled selected> -- Seleccione --</option>
+                                            @foreach ($fondos as $fondo)
+                                            <option value="{{$fondo->id}}">{{$fondo->nombre}}</option>
+                                        @endforeach
+                                        </select>
+                                        @error('id_producto_fondo_{{$i}}')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong style="color:red">{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+
+                                    <div class="input-field col s12 m6 l3">
+                                        <select name="menus[{{$i}}][id_producto_acompanamiento]" id="id_producto_acompanamiento_{{$i}}">
+                                            <option value="" disabled selected> -- Seleccione --</option>
+                                            @foreach ($acompañamientos as $acompañamiento)
+                                            <option value="{{$acompañamiento->id}}">{{$acompañamiento->nombre}}</option>
+                                        @endforeach
+                                        </select>
+                                        @error('id_producto_acompanamiento_{{$i}}')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong style="color:red">{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+
+                                    <div class="input-field col s12 m6 l3">
+                                        <input type="text" name="menus[{{ $i }}][observacion]"
+                                            id="observacion_{{ $i }}" />
+                                        <label for="observacion_{{$i}}">Observaciones</label>
+                                        @error('id_producto_entrada')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong style="color:red">{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    @endfor
                             </div>
 
 
@@ -185,11 +294,11 @@
 
 
 @section('foot')
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.timepicker');
     var instances = M.Timepicker.init(elems);
   });
-</script>
+</script> --}}
 
 @endsection

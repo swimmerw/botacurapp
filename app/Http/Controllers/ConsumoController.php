@@ -24,21 +24,6 @@ class ConsumoController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create($venta)
-    {
-        $venta = Venta::findOrFail($venta);
-        $tipos = TipoProducto::all();
-        return view('themes.backoffice.pages.consumo.create', [
-            'venta' => $venta,
-            'tipos' => $tipos,
-        ]);
-    }
-
     public function create_service($venta)
     {
         $venta = Venta::findOrFail($venta);
@@ -49,12 +34,21 @@ class ConsumoController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    function store_service(Request $request, Venta $venta) 
+    {
+        dd($request);    
+    }
+
+    public function create($venta)
+    {
+        $venta = Venta::findOrFail($venta);
+        $tipos = TipoProducto::all();
+        return view('themes.backoffice.pages.consumo.create', [
+            'venta' => $venta,
+            'tipos' => $tipos,
+        ]);
+    }
+
     public function store(Request $request, Venta $venta)
     {
         // Iniciar una transacción en la base de datos

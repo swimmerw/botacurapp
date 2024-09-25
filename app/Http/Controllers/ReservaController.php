@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Cliente;
+use App\Consumo;
+use App\DetalleServiciosExtra;
 use App\Http\Requests\Reserva\StoreRequest;
 use App\Programa;
 use App\Reserva;
+use App\Servicio;
 use App\TipoTransaccion;
 use App\Venta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -26,17 +30,43 @@ class ReservaController extends Controller
     {
         Carbon::setLocale('es');
 
-        $currentMonth = Carbon::now()->month;
-        $currentYear = Carbon::now()->year;
+        // Vista anterior
+        // $currentMonth = Carbon::now()->month;
+        // $currentYear = Carbon::now()->year;
 
-        $reservasPorMes = Reserva::with('cliente')
+        // $reservasPorMes = Reserva::with(['cliente', 'visitas', 'programa.servicios'])
+        //     ->orderBy('fecha_visita')
+        //     ->get()
+        //     ->groupBy(function ($date) {
+        //         return Carbon::parse($date->fecha_visita)->format('Y-m');
+        //     });
+
+        // Vista actual
+        $fechaActual = Carbon::now()->startOfDay();
+
+        $reservas = Reserva::where('fecha_visita', '>=', $fechaActual)
+            ->with(['cliente', 'visitas', 'programa.servicios'])
             ->orderBy('fecha_visita')
-            ->get()
-            ->groupBy(function ($date) {
-                return Carbon::parse($date->fecha_visita)->format('Y-m');
-            });
+            ->get();
+        // ->groupBy(function ($reserva) {
+        //     return Carbon::parse($reserva->fecha_visita)->format('d-m-Y');
+        // });
 
-        return view('themes.backoffice.pages.reserva.index', compact('reservasPorMes', 'currentMonth', 'currentYear'));
+        // Agrupar reservas por fecha
+        $reservasPorDia = $reservas->groupBy(function ($reserva) {
+            return Carbon::parse($reserva->fecha_visita)->format('d-m-Y');
+        });
+
+        // Paginación manual de los días
+        $perPage = 1; // Número de días por página
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentItems = $reservasPorDia->slice(($currentPage - 1) * $perPage, $perPage)->all();
+
+        // Crear el paginador manualmente
+        $reservasPaginadas = new LengthAwarePaginator($currentItems, $reservasPorDia->count(), $perPage, $currentPage);
+        $reservasPaginadas->setPath(request()->url());
+
+        return view('themes.backoffice.pages.reserva.index', compact('reservasPaginadas'));
     }
 
     /**
@@ -47,9 +77,8 @@ class ReservaController extends Controller
     public function create($cliente)
     {
         $cliente = Cliente::findOrFail($cliente);
-        $programas = Programa::all();
+        $programas = Programa::with('servicios')->get();
         $tipos = TipoTransaccion::all();
-
 
         return view('themes.backoffice.pages.reserva.create', [
             'cliente' => $cliente,
@@ -66,11 +95,16 @@ class ReservaController extends Controller
      */
     public function store(StoreRequest $request, Reserva $reserva)
     {
-        // $reserva = $reserva->store($request);
-        // dd($request);
+
+        // Verificar si el programa seleccionado incluye un masaje
+        $programa = Programa::find($request->id_programa);
+
+        // Buscar si el programa tiene un servicio de masaje
+        $incluyeMasaje = $programa->servicios()->whereIn('nombre_servicio', ['Masaje', 'Masajes', 'masaje', 'masajes'])->exists();
 
         // Iniciar la transacción
-        DB::transaction(function () use ($request, &$reserva) {
+        DB::transaction(function () use ($request, &$reserva, $incluyeMasaje) {
+
             // Asignar el id del cliente con la reserva
             if ($request->has('cliente_id')) {
                 $cliente = $request->cliente_id;
@@ -82,33 +116,86 @@ class ReservaController extends Controller
             $request->merge(['user_id' => $user_id]);
 
             // Crear la reserva
-            $reserva = Reserva::create($request->all()); // Cambiado de self::create a Reserva::create
+            $reserva = Reserva::create($request->all());
+
+            // Asignar cantidad_personas a cantidad_masajes solo si el programa incluye masaje
+            if ($incluyeMasaje) {
+                $reserva->update(['cantidad_masajes' => $reserva->cantidad_personas]);
+            } else {
+                // Dejarlo nulo explícitamente si no hay masaje
+                $reserva->update(['cantidad_masajes' => null]);
+            }
 
             // Generar url para almacenar imagen
             $url_abono = null;
+            $filename = null;
 
             if ($request->hasFile('imagen_abono')) {
                 $abono = $request->file('imagen_abono');
                 $filename = time() . '-' . $abono->getClientOriginalName();
-                Storage::disk('imagen_abono')->put($filename, File::get($abono));
-                $url_abono = $filename;
+                $url_abono = 'temp/' . $filename; // Almacenamiento temporal
+                Storage::disk('imagen_abono')->put($url_abono, File::get($abono));
             }
 
+            // if ($request->hasFile('imagen_abono')) {
+            //     $abono = $request->file('imagen_abono');
+            //     $filename = time() . '-' . $abono->getClientOriginalName();
+            //     Storage::disk('imagen_abono')->put($filename, File::get($abono));
+            //     $url_abono = $filename;
+            // }
+
             // Crear la venta relacionada con la reserva
-            Venta::create([
-                'id_reserva' => $reserva->id, // Usar el ID de la reserva generada
+            $venta = Venta::create([
+                'id_reserva' => $reserva->id,
                 'abono_programa' => $request->abono_programa,
                 'imagen_abono' => $url_abono,
                 'id_tipo_transaccion_abono' => $request->id_tipo_transaccion_abono,
                 'total_pagar' => $request->total_pagar,
             ]);
+
+            // Si la imagen fue almacenada temporalmente, moverla a su ubicación final
+            if ($filename) {
+                $finalPath = '/' . $filename;
+                Storage::disk('imagen_abono')->move('temp/' . $filename, $finalPath);
+                $venta->update(['imagen_abono' => $finalPath]);
+            }
+
+            $subtotal = 0;
+
+            if ($request->has('cantidad_masajes_extra')) {
+                $consumo = Consumo::create([
+                    'id_venta' => $venta->id,
+                    'subtotal' => 0,
+                    'total_consumo' => 0,
+                ]);
+
+                $servicioMasaje = Servicio::whereIn('nombre_servicio', ['Masaje', 'Masajes', 'masaje', 'masajes'])->first();
+
+                if ($servicioMasaje) {
+                    $cantidadMasajesExtra = intval($request->input('cantidad_masajes_extra'));
+                    $subtotalMasajes = $servicioMasaje->valor_servicio * $cantidadMasajesExtra;
+                    $subtotal = $subtotalMasajes;
+
+                    // Crear el detalle del servicio extra
+                    DetalleServiciosExtra::create([
+                        'cantidad_servicio' => $cantidadMasajesExtra,
+                        'subtotal' => $subtotalMasajes,
+                        'id_consumo' => $consumo->id,
+                        'id_servicio_extra' => $servicioMasaje->id,
+                    ]);
+
+                    $consumo->subtotal += $subtotal;
+                    $consumo->save();
+                }
+
+            }
         });
 
         // Mostrar alerta de éxito
         Alert::success('Éxito', 'Reserva realizada con éxito', 'Confirmar')->showConfirmButton();
 
         // Redirigir fuera de la transacción
-        return redirect()->route('backoffice.cliente.show', ['cliente' => $reserva->cliente_id]);
+        return redirect()->route('backoffice.reserva.visitas.create', ['reserva' => $reserva->id]);
 
     }
 
@@ -121,7 +208,7 @@ class ReservaController extends Controller
     public function show(Reserva $reserva)
     {
         $reserva->load('venta.consumos.detallesConsumos.producto');
-        
+
         return view('themes.backoffice.pages.reserva.show', [
             'reserva' => $reserva,
         ]);

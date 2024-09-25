@@ -208,6 +208,13 @@
                                 </div>
 
                                 <button type="button" id="add-insumo-btn" class="btn">Agregar Insumo</button>
+                                <button id="remove-insumo-btn" type="button" class="btn">Eliminar Insumo</button>
+                            </div>
+                            <div class="row">
+<br>
+                                <div class="col s12">
+                                </div>
+
                             </div>
 
 
@@ -248,6 +255,10 @@ $(document).ready(function() {
     // Al hacer clic en "Agregar Insumo", añadir un nuevo insumo vacío
     $('#add-insumo-btn').off('click').on('click', function() {
         agregarInsumo(); // Llamamos a la función para añadir un nuevo insumo
+    });
+
+    $('#remove-insumo-btn').off('click').on('click', function() {
+        eliminarUltimoInsumo(); // Llamamos a la función para eliminar el último insumo
     });
 
     // Función para agregar un nuevo insumo vacío
@@ -292,6 +303,16 @@ $(document).ready(function() {
             M.FormSelect.init(this);
         });
     }
+
+        // Función para eliminar el último insumo
+        function eliminarUltimoInsumo() {
+        let $wrapper = $('#insumos-wrapper');
+        if ($wrapper.find('.insumo-item').length > 0) {
+            $wrapper.find('.insumo-item:last').remove(); // Elimina el último insumo añadido
+            insumoIndex--; // Decrementamos el índice
+        }
+    }
+    
 });
 
 

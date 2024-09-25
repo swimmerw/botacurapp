@@ -61,13 +61,20 @@
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a class="grey-text text-darken-1" href="#">
+                        <a class="grey-text text-darken-1" href="{{ route('logout') }}" onclick="event.preventDefault();
+                  document.getElementById('logout-form').submit();">
                             <i class="material-icons">keyboard_tab</i>
-                            Logout
+                            {{ __('Logout') }}
                         </a>
                     </li>
                 </ul>
             </div>
         </nav>
     </div>
+
+
+
+ <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+     @csrf
+ </form>
 </header>

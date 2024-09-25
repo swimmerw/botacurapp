@@ -23,7 +23,8 @@
         <div class="card-panel">
           <h4 class="header">Crear reserva para <strong>{{$cliente->nombre_cliente}}</strong></h4>
           <div class="row">
-            <form class="col s12" method="post" enctype="multipart/form-data" action="{{route('backoffice.reserva.store')}}">
+            <form class="col s12" method="post" enctype="multipart/form-data"
+              action="{{route('backoffice.reserva.store')}}">
 
 
               {{csrf_field() }}
@@ -31,16 +32,18 @@
 
 
               <div class="row">
-                <div class="input-field col s12 m6 l4">
+                <div class="input-field col s12 m6">
 
                   <select name="id_programa" id="id_programa">
                     <option value="" disabled selected>-- Seleccione un programa --</option>
                     @foreach ($programas as $programa)
-                    <option value="{{$programa->id}}" @if (old('id_programa') == $programa->id)
+                    <option value="{{$programa->id}}" @if (old('id_programa')==$programa->id)
                       selected
-                    @else
-                      
-                    @endif data-valor="{{$programa->valor_programa}}">{{$programa->nombre_programa}}</option>
+                      @else
+
+                      @endif data-valor="{{$programa->valor_programa}}"
+                      data-incluye-masajes="{{ $programa->incluye_masajes ? '1' : '0' }}"
+                      >{{$programa->nombre_programa}}</option>
                     @endforeach
                   </select>
                   <label for="id_programa">Programa</label>
@@ -50,10 +53,10 @@
                   </span>
                   @enderror
                 </div>
-                
 
 
-                <div class="input-field col s12 m6 l4">
+
+                <div class="input-field col s12 m6">
                   <input id="cliente_id" type="hidden" class="form-control" name="cliente_id" value="{{$cliente->id}}"
                     required>
 
@@ -71,7 +74,7 @@
 
                 </div>
 
-                <div class="input-field col s12 m6 l4">
+                {{-- <div class="input-field col s12 m6 l4">
                   <input id="cantidad_masajes" type="number" name="cantidad_masajes"
                     value="{{ old('cantidad_masajes') }}">
                   <label for="cantidad_masajes">Cantidad Masajes</label>
@@ -80,8 +83,15 @@
                     <strong style="color:red">{{ $message }}</strong>
                   </span>
                   @enderror
-                </div>
+                </div> --}}
 
+
+
+                
+
+                
+                
+              </div>
               </div>
 
               <div class="row">
@@ -119,12 +129,12 @@
                   <select name="id_tipo_transaccion_abono" id="id_tipo_transaccion_abono">
                     <option value="" disabled selected>-- Seleccione --</option>
                     @foreach ($tipos as $tipo)
-                    <option value="{{$tipo->id}}" @if (old('id_tipo_transaccion_abono') == $tipo->id)
+                    <option value="{{$tipo->id}}" @if (old('id_tipo_transaccion_abono')==$tipo->id)
                       selected
-                    @else
-                      
-                    @endif
-                    >{{$tipo->nombre}}</option>
+                      @else
+
+                      @endif
+                      >{{$tipo->nombre}}</option>
                     @endforeach
                   </select>
                   <label for="id_tipo_transaccion_abono">Tipo Transaccion Abono</label>
@@ -134,11 +144,10 @@
 
 
               <div class="row">
-                {{-- <label for="fecha_visita">Fecha Visita</label> --}}
-                <p>Fecha Visita: </p>
-                <div class="input-field col s12 m6">
+                <div class="input-field col s12 m3">
+                  <label for="fecha_visita">Fecha Visita</label>
                   <input id="fecha_visita" type="date" name="fecha_visita" class="" value="{{ old('fecha_visita') }}"
-                    placeholder="fecha Visita">
+                  placeholder="fecha Visita">
                   @error('fecha_visita')
                   <span class="invalid-feedback" role="alert">
                     <strong style="color:red">{{ $message }}</strong>
@@ -146,7 +155,7 @@
                   @enderror
                 </div>
 
-                <div class="input-field col s12 m6">
+                <div class="input-field col s12 m3">
                   <input id="observacion" name="observacion" type="text" class="" value="{{ old('observacion') }}" />
                   <label for="observacion">Observaciones</label>
                   @error('observacion')
@@ -155,6 +164,26 @@
                   </span>
                   @enderror
                 </div>
+
+
+                
+                <label id="checkbox-masajes-container" class="input-field col s12 m3">
+                  <input  style="display: none" type="checkbox" id="agregar_masajes" name="agregar_masajes" />
+                  <span>¿Desea agregar masajes?</span>
+                </label>  
+
+
+                <div class="input-field col s12 m3" id="input-cantidad-masajes-container">
+                  <input id="cantidad_masajes_extra" type="number" name="cantidad_masajes_extra" value="{{ old('cantidad_masajes_extra') }}">
+                  <label for="cantidad_masajes_extra">Cantidad masajes extras</label>
+                  @error('cantidad_masajes_extra')
+                  <span class="invalid-feedback" role="alert">
+                    <strong style="color:red">{{ $message }}</strong>
+                  </span>
+                  @enderror
+                </div>
+
+ 
 
 
               </div>
@@ -255,4 +284,60 @@ function calcularValorTotal(){
 }
 
 </script>
+
+
+<script>
+$(document).ready(function(e){
+  const selectPrograma = $('#id_programa');
+  const cantidadMasajesInput = $('#cantidad_masajes').closest('div');
+  const checkboxMasajesContainer = $('#checkbox-masajes-container');
+  const inputCantidadMasajesContainer = $('#input-cantidad-masajes-container');
+  const agregarMasajesCheckbox = $('#agregar_masajes');
+  const cantidadMasajesExtraInput = $('#cantidad_masajes_extra');
+
+
+  function toggleMasajesField() {
+    const selectedOption = selectPrograma.find('option:selected');
+    const incluyeMasajes = selectedOption.data('incluye-masajes');
+    const inputMasajes = $('#cantidad_masajes');
+    
+    if (incluyeMasajes === 1) {
+      // Si el programa incluye masajes, mostramos el input normal de cantidad de masajes
+      cantidadMasajesInput.show();
+      checkboxMasajesContainer.hide(); // Ocultar el checkbox de agregar masajes extras
+      inputCantidadMasajesContainer.hide(); // Ocultar el input de cantidad de masajes extras
+      cantidadMasajesExtraInput.val('');
+      agregarMasajesCheckbox.prop('checked', false);
+      inputMasajes.val('');
+    } else {
+      // Si no incluye masajes, ocultamos el input normal de masajes y mostramos el checkbox para agregar masajes extras
+      cantidadMasajesInput.hide();
+      checkboxMasajesContainer.show(); // Mostrar checkbox para agregar masajes
+      inputCantidadMasajesContainer.hide(); // Inicialmente ocultamos el input de cantidad de masajes extras
+      cantidadMasajesExtraInput.val('');
+      agregarMasajesCheckbox.prop('checked', false);
+      inputMasajes.val('');
+    }
+  }
+
+  // Mostrar el input de cantidad de masajes solo si el checkbox está marcado
+  agregarMasajesCheckbox.on('change', function() {
+    if ($(this).is(':checked')) {
+      inputCantidadMasajesContainer.show(); // Mostrar el input de cantidad si el checkbox está marcado
+    } else {
+      inputCantidadMasajesContainer.hide(); // Ocultar el input si el checkbox está desmarcado
+    }
+  });
+
+  // Escucha el evento change del select para detectar cuando cambie
+  selectPrograma.on('change', toggleMasajesField);
+
+  // Inicializa el estado del campo en la carga de la página
+  toggleMasajesField(); // Para verificar la selección inicial
+  
+});
+
+
+</script>
+
 @endsection

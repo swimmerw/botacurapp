@@ -70,6 +70,10 @@ public function my_update($request)
     
 }
 //VALIDACION
+public function getIncluyeMasajesAttribute()
+{
+    return $this->servicios->contains('nombre_servicio', 'Masaje');
+}
 
 //RECUPERACION DE INFORMACION
 

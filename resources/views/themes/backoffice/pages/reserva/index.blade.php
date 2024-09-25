@@ -6,24 +6,112 @@
 @endsection
 
 @section('head')
-<link href='{{ asset('assets/fullcalendar/packages/core/main.css') }}' rel='stylesheet' />
-<link href='{{asset('assets/fullcalendar/packages/daygrid/main.css')}}' rel='stylesheet' />
-<link href='{{asset('assets/fullcalendar/packages/timegrid/main.css')}}' rel='stylesheet' />
 @endsection
 
 @section('content')
 <div class="section">
-    <p class="caption"><strong>Reservaciones</strong></p>
+    <p class="caption"><strong>Reservas desde {{ now()->format('d-m-Y') }}</strong></p>
     <div class="divider"></div>
     <div id="basic-form" class="section">
-        <div class="row">
-            <div class="col s12 ">
-    
+        <div class="card-panel ">
 
-                    <div id="calendar"></div>
+            @foreach($reservasPaginadas as $fecha => $reservas)
+            <div class="col s12">
+                <h5>Reservas: {{ $fecha }}</h5>
+                <div class="row">
+                    <div class="col s12 m6 l4">
+                        <div class="card-panel animate__animated animate__backInDown" style="--animate-delay: 1s; --animate-duration: 2s; ">
+                            <table class="highlight">
+                                <thead>
+                                    <tr>
+                                        <th>Sauna</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($reservas as $reserva)
+                                    @foreach ($reserva->visitas as $visita)
+                                    @if ($visita->horario_sauna)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('backoffice.reserva.show', $reserva) }}">
+                                                {{ $visita->horario_sauna }} - {{ $visita->hora_fin_sauna }}
+                                                <strong>{{ addslashes($reserva->cliente->nombre_cliente) }} -</strong>
+                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
+                    <div class="col s12 m6 l4">
+                        <div class="card-panel animate__animated animate__backInDown" style="--animate-delay: 2s; --animate-duration: 2s; ">
+                            <table class="highlight">
+                                <thead>
+                                    <tr>
+                                        <th>Tinaja</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($reservas as $reserva)
+                                    @foreach ($reserva->visitas as $visita)
+                                    @if ($visita->horario_tinaja)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('backoffice.reserva.show', $reserva) }}">
+                                                {{ $visita->horario_tinaja }} - {{ $visita->hora_fin_tinaja }}
+                                                <strong>{{ addslashes($reserva->cliente->nombre_cliente) }} -</strong>
+                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
+                    <div class="col s12 m6 l4">
+                        <div class="card-panel animate__animated animate__backInDown" style="--animate-delay: 3s; --animate-duration: 2s; ">
+                            <table class="highlight">
+                                <thead>
+                                    <tr>
+                                        <th>Masaje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($reservas as $reserva)
+                                    @foreach ($reserva->visitas as $visita)
+                                    @if ($visita->horario_masaje)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('backoffice.reserva.show', $reserva) }}">
+                                                {{ $visita->horario_masaje }} - {{ $visita->hora_fin_masaje }}
+                                                <strong>{{ addslashes($reserva->cliente->nombre_cliente) }} -</strong>
+                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
 
+            <!-- Paginación -->
+            <div class="center-align">
+                {{ $reservasPaginadas->links('vendor.pagination.materialize') }}
             </div>
         </div>
     </div>
@@ -31,83 +119,6 @@
 @endsection
 
 @section('foot')
-<script src='{{ asset('assets/fullcalendar/packages/core/main.min.js')}}'></script>
-<script src='{{ asset('assets/fullcalendar/packages/interaction/main.js')}}'></script>
-<script src='{{ asset('assets/fullcalendar/packages/daygrid/main.js')}}'></script>
-<script src='{{ asset('assets/fullcalendar/packages/timegrid/main.js')}}'></script>
 
 
-<script>
-    function convertirFecha(fecha) {
-    var parts = fecha.split('-');
-    return parts[2] + '-' + parts[1] + '-' + parts[0];
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-
-    if (window.calendarInitialized) {
-
-        return;
-    }
-    window.calendarInitialized = true;
-
-
-    var calendarEl = document.getElementById('calendar');
-
-    var eventos = [];
-    @foreach($reservasPorMes as $mes => $reservas)
-        @foreach($reservas as $reserva)
-        var formatoFecha = convertirFecha('{{$reserva->fecha_visita}}')
-        eventos.push({
-            title: '{{ addslashes($reserva->cliente->nombre_cliente) }} - {{ $reserva->cantidad_personas }} personas - {{$reserva->programa->nombre_programa}}',
-            start: formatoFecha+' 10:00',
-            end: formatoFecha+' 19:00',
-            url: '{{ route('backoffice.reserva.show', $reserva->id) }}',
-            description: '{{ addslashes($reserva->observacion) }}'
-        });
-        @endforeach
-    @endforeach
-
-    
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        locale: 'es',
-        plugins: ['interaction', 'dayGrid', 'timeGrid'],
-        header: {
-            left: 'prev,next,today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        buttonText:{
-            month: 'Mes',
-            week: 'Semana',
-            day: 'Día',
-            today: 'Hoy'
-        },
-        height: 650,
-        contentHeight: 800,
-        firstDay: 1,
-        editable: true,
-        eventLimit: true,
-        events: eventos,
-        eventColor: 'gradient-45deg-light-blue-cyan',
-        eventClick: function(event) {
-            if (event.url) {
-                window.open(event.url, '_blank');
-                return false;
-            }
-        },
-    });
-
-    
-    calendar.render();
-    
-    let title = document.querySelector('.fc-center h2');
-    if (title) {
-                title.textContent = title.textContent.replace(/\b\w/g, function(char) {
-                    return char.toUpperCase();
-                });
-            }
-});
-</script>
 @endsection

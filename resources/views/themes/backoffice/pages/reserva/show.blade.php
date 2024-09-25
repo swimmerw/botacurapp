@@ -11,8 +11,8 @@
 @endsection
 
 @section('dropdown_settings')
-<li><a href="{{ route('backoffice.reserva.visitas.create',$reserva) }}" class="grey-text text-darken-2">Generar
-    Visita</a></li>
+{{-- <li><a href="{{ route('backoffice.reserva.visitas.create',$reserva) }}" class="grey-text text-darken-2">Generar
+    Visita</a></li> --}}
 @endsection
 
 @section('content')

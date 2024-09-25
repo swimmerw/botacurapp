@@ -36,6 +36,10 @@ class Visita extends Model
         return $this->belongsTo(LugarMasaje::class, 'id_lugar_masaje');
     }
 
+    public function menu(){
+        return $this->hasMany(Menu::class);
+    }
+
     //ALMACENAMIENTO
 
     //VALIDACION
@@ -48,15 +52,15 @@ class Visita extends Model
 
     public function getHorarioSaunaAttribute($value)
     {
-        return Carbon::parse($value)->format('h:i A');
+        return $value ? Carbon::parse($value)->format('H:i') : null;
     }
     public function getHorarioTinajaAttribute($value)
     {
-        return Carbon::parse($value)->format('h:i A');
+        return $value ? Carbon::parse($value)->format('H:i') : null;
     }
     public function getHorarioMasajeAttribute($value)
     {
-        return Carbon::parse($value)->format('h:i A');
+        return $value ? Carbon::parse($value)->format('H:i') : null;
     }
 
     public function getHoraFinSaunaAttribute()
@@ -80,10 +84,9 @@ class Visita extends Model
         $servicio = $this->reserva->programa->servicios->first(function ($servicio) use ($nombreServicio) {
             return in_array($servicio->nombre_servicio, $nombreServicio);
         });
-
         if ($horarioInicio && $servicio) {
             $horaInicio = Carbon::parse($horarioInicio);
-            return $horaInicio->addMinutes($servicio->duracion)->format('h:i A');
+            return $horaInicio->addMinutes($servicio->duracion)->format('H:i');
         }
 
         return null;

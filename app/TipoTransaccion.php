@@ -14,10 +14,10 @@ class TipoTransaccion extends Model
 
 
 //RELACIONES
-// public function programa()
-// {
-//     return $this->belongsTo('App\Programa');
-// }
+public function ventas()
+{
+    return $this->hasMany(Venta::class);
+}
 
 // public function reservaciones()
 // {
