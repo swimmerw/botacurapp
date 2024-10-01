@@ -15,7 +15,26 @@ class Menu extends Model
     ];
 
     // RELACIONES
-    public function visita(){
-        return $this->belongsTo(Visita::class);
+    public function visita()
+    {
+        return $this->belongsTo(Visita::class, 'id_visita');
+    }
+
+    // Relación con el producto de entrada
+    public function productoEntrada()
+    {
+        return $this->belongsTo(Producto::class, 'id_producto_entrada');
+    }
+
+    // Relación con el producto de fondo
+    public function productoFondo()
+    {
+        return $this->belongsTo(Producto::class, 'id_producto_fondo');
+    }
+
+    // Relación con el producto de acompañamiento
+    public function productoAcompanamiento()
+    {
+        return $this->belongsTo(Producto::class, 'id_producto_acompanamiento');
     }
 }

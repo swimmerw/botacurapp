@@ -36,8 +36,8 @@ class Visita extends Model
         return $this->belongsTo(LugarMasaje::class, 'id_lugar_masaje');
     }
 
-    public function menu(){
-        return $this->hasMany(Menu::class);
+    public function menus(){
+        return $this->hasMany(Menu::class, 'id_visita');
     }
 
     //ALMACENAMIENTO

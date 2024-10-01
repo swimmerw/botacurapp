@@ -34,23 +34,24 @@
                                     <input id="id_venta" type="hidden" name="id_venta" value="{{$venta->id}}" required>
                                 </div>
 
-                                <div class="card">
-                                    @foreach($tipos as $tipo)
+                                {{-- <div class="card">
                                     <div class="card-content gradient-45deg-light-blue-cyan">
-                                        <h5 class="white-text">{{ $tipo->nombre }}</h5>
+                                        <h5 class="white-text">nombre tipo</h5>
                                     </div>
 
                                     <div class="card-tabs">
                                         <ul class="tabs tabs-fixed-width">
+                                            @foreach($tipos as $tipo)
                                             <li class="tab"><a href="#tipo_{{$tipo->id}}">{{$tipo->nombre}}</a></li>
+                                            @endforeach
                                         </ul>
                                     </div>
 
 
-                                    <div class="card-content grey lighten-4"
-                                        >
-                                        @foreach($tipo->productos as $producto)
+                                    <div class="card-content grey lighten-4">
                                         <div class="row">
+                                            @foreach($tipos as $tipo)
+                                            @foreach($tipo->productos as $producto)
                                             <div class="col s6" id="tipo_{{$producto->id_tipo_producto}}">
                                                 <blockquote>
                                                     <h5>
@@ -63,7 +64,9 @@
                                                 <h5>
                                                     ${{$producto->valor}}
                                                 </h5>
-                                                <input id="productos_{{ $producto->id }}" type="hidden" name="productos[{{ $producto->id }}][valor]" value="{{$producto->valor}}">
+                                                <input id="productos_{{ $producto->id }}" type="hidden"
+                                                    name="productos[{{ $producto->id }}][valor]"
+                                                    value="{{$producto->valor}}">
 
                                             </div>
                                             <div class="input-field col s2 offset-s2">
@@ -71,13 +74,64 @@
                                                 <input id="producto_{{ $producto->id }}" type="number"
                                                     name="productos[{{ $producto->id }}][cantidad]" value="">
                                             </div>
+
+
+                                            @endforeach
+                                            @endforeach
+                                        </div>
+
+
+                                    </div>
+                                </div> --}}
+
+
+                                <div class="card">
+                                    <div class="card-content gradient-45deg-light-blue-cyan">
+                                        <h5 class="white-text" id="nombreSeleccion">nombre tipo</h5>
+                                    </div>
+
+                                    <div class="card-tabs">
+                                        <ul class="tabs tabs-fixed-width">
+                                            @foreach($tipos as $tipo)
+                                            <li class="tab"><a href="#tipo_{{$tipo->id}}"
+                                                    id="seleccion">{{$tipo->nombre}}</a></li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+
+                                    <div class="card-content grey lighten-4">
+                                        @foreach($tipos as $tipo)
+                                        <div id="tipo_{{$tipo->id}}" class="tipo-section">
+                                            <div class="row">
+                                                @foreach($tipo->productos as $producto)
+                                                <div class="col s12 m6">
+                                                    <blockquote>
+                                                        <h5>{{ $producto->nombre }}</h5>
+                                                    </blockquote>
+                                                </div>
+
+                                                <div class="col s12 m2">
+                                                    <h5>${{ $producto->valor }}</h5>
+                                                    <input id="productos_{{ $producto->id }}" type="hidden"
+                                                        name="productos[{{ $producto->id }}][valor]"
+                                                        value="{{ $producto->valor }}">
+                                                </div>
+
+                                                <div class="input-field col s12 m4">
+                                                    <label for="producto_{{ $producto->id }}">Cantidad</label>
+                                                    <input id="producto_{{ $producto->id }}" type="number"
+                                                        name="productos[{{ $producto->id }}][cantidad]" value="">
+                                                </div>
+                                                @endforeach
+                                            </div>
                                         </div>
                                         @endforeach
                                     </div>
                                 </div>
 
+
                             </div>
-                            @endforeach
+
 
 
 
@@ -122,6 +176,28 @@
 
 @section('foot')
 <script>
-    // Si deseas agregar algún comportamiento adicional con JavaScript
+    $(document).ready(function () {
+        // let nombreTipo = $('#nombreSeleccion').text();
+        let seleccion = $('#seleccion').text();
+        
+        
+            // Obtener el texto del primer tab visible y mostrarlo en el h5 al cargar la página
+            let nombreInicial = $('.tabs .tab a.active').text();
+            if (!nombreInicial) {
+                nombreInicial = $('.tabs .tab a:first').text();
+            }
+            $('#nombreSeleccion').text(nombreInicial); // Mostrar el nombre inicial
+
+            // Escuchar el evento click en las pestañas
+            $('.tabs .tab a').on('click', function (e) {
+                e.preventDefault();
+
+                // Obtener el texto del enlace seleccionado
+                let nombreTipo = $(this).text();
+
+                // Actualizar el contenido del h5 con id "nombreSeleccion"
+                $('#nombreSeleccion').text(nombreTipo);
+            });
+    });
 </script>
 @endsection

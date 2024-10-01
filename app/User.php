@@ -51,7 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function roles()
     {
-        return $this->belongsToMany('App\Role')->withTimestamps();
+        return $this->belongsToMany(Role::class)->withTimestamps();
         
     }
 
@@ -150,7 +150,7 @@ class User extends Authenticatable implements MustVerifyEmail
         {
             if($this->has_role(config('app.admin_role'))){
                 $users = self::all(); 
-            }elseif($this->has_role(config('app.administracion_role'))) {
+            }elseif($this->has_role(config('app.admin_role'))) {
                 $users = self::whereHas('roles', function($q){
                     $q->whereIn('slug', [
                         config('app.anfitriona_role'),

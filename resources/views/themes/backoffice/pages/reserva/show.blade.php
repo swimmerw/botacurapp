@@ -89,19 +89,31 @@
             </div>
 
 
-
+            @if(Auth::user()->has_role(config('app.admin_role')))
             <div class="card-action">
               <a href="{{route('backoffice.cliente.edit', $reserva->cliente_id)}}" class="purple-text">Editar</a>
               {{-- <a href="#" style="color: red" onclick="enviar_formulario()">Eliminar</a> --}}
             </div>
+            @endif
+
           </div>
         </div>
 
       </div>
 
+
       <div class="col s12 m4">
         @include('themes.backoffice.pages.reserva.includes.reagendamiento')
       </div>
+
+
+
+      <div class="col s12 m4">
+        @include('themes.backoffice.pages.reserva.includes.consumo')
+      </div>
+
+
+      @endif
     </div>
 
 
@@ -115,7 +127,7 @@
         {{-- TABLA PROGRAMA --}}
         <div id="work-collections">
           <div class="row">
-            <div class="col s12 m12 l4">
+            <div class="col s12 m12 l5">
               <ul id="projects-collection" class="collection z-depth-1">
                 <li class="collection-item avatar">
                   <i class="material-icons cyan circle">card_travel</i>
@@ -142,11 +154,9 @@
 
 
 
-
-
             {{-- TABLA VISITA --}}
 
-            <div class="col s12 m12 l8">
+            <div class="col s12 m12 l7">
               <ul id="issues-collection" class="collection z-depth-1">
                 <li class="collection-item avatar">
                   <i class="material-icons green accent-2 circle">spa</i>
@@ -236,8 +246,72 @@
 
               </ul>
             </div>
+
+
+            {{-- Menus --}}
+            <div class="col s12 m12">
+              <ul id="projects-collection" class="collection z-depth-1">
+                <li class="collection-item avatar">
+                  <i class="material-icons light-blue darken-4 circle">restaurant_menu</i>
+                  <h6 class="collection-header m-0">Menú</h6>
+                  <p>Selecciones</p>
+                </li>
+    
+    
+                <table class="responsive-table">
+                  <thead>
+                    <tr>
+                      <th>Menú</th>
+                      <th>Entrada</th>
+                      <th>Fondo</th>
+                      <th>Acompañamiento</th>
+                      <th>Observaciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+    
+                    @foreach($reserva->visitas as $visita)
+                    @foreach($visita->menus as $index => $menu)
+                    <tr>
+    
+    
+                      <td>
+                        <strong>Menú {{$index + 1}}:</strong>
+                      </td>
+                      <td>
+                        {{ $menu->productoEntrada->nombre }}
+                      </td>
+                      <td>
+    
+                        {{ $menu->productoFondo->nombre }}
+                      </td>
+                      <td>
+    
+                        {{ $menu->productoAcompanamiento->nombre }}
+                      </td>
+                      
+                        @if ($menu->observacion == null)
+                          <td> No Registra</td>
+                        @endif
+                        <td style="color: red">{{ $menu->observacion }}</td>
+    
+                    </tr>
+                    @endforeach
+                    @endforeach
+    
+    
+                  </tbody>
+                </table>
+    
+    
+              </ul>
+            </div>
+
+
           </div>
         </div>
+
+
 
 
 
@@ -254,6 +328,7 @@
       </div>
 
       @include('themes.backoffice.pages.reserva.includes.modal_venta')
+
     </div>
 
   </div>

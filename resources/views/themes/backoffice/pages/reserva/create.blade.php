@@ -74,25 +74,12 @@
 
                 </div>
 
-                {{-- <div class="input-field col s12 m6 l4">
-                  <input id="cantidad_masajes" type="number" name="cantidad_masajes"
-                    value="{{ old('cantidad_masajes') }}">
-                  <label for="cantidad_masajes">Cantidad Masajes</label>
-                  @error('cantidad_masajes')
-                  <span class="invalid-feedback" role="alert">
-                    <strong style="color:red">{{ $message }}</strong>
-                  </span>
-                  @enderror
-                </div> --}}
 
 
 
-                
 
-                
-                
               </div>
-              </div>
+
 
               <div class="row">
 
@@ -126,19 +113,22 @@
 
 
                 <div class="input-field col s12 m4">
-                  <select name="id_tipo_transaccion_abono" id="id_tipo_transaccion_abono">
-                    <option value="" disabled selected>-- Seleccione --</option>
+                  <select id="tipo_transaccion" name="tipo_transaccion">
+                    <option disabled selected>-- Seleccione --</option>
                     @foreach ($tipos as $tipo)
-                    <option value="{{$tipo->id}}" @if (old('id_tipo_transaccion_abono')==$tipo->id)
-                      selected
-                      @else
-
-                      @endif
-                      >{{$tipo->nombre}}</option>
+                    <option value="{{ $tipo->id }}" @if (old('tipo_transaccion')==$tipo->id) selected @endif>
+                      {{ $tipo->nombre }}
+                    </option>
                     @endforeach
                   </select>
-                  <label for="id_tipo_transaccion_abono">Tipo Transaccion Abono</label>
+                  @error('tipo_transaccion')
+                  <span class="invalid-feedback" role="alert">
+                    <strong style="color:red">{{ $message }}</strong>
+                  </span>
+                  @enderror
+                  <label for="tipo_transaccion">Tipo Transacción Abono</label>
                 </div>
+
               </div>
 
 
@@ -147,7 +137,7 @@
                 <div class="input-field col s12 m3">
                   <label for="fecha_visita">Fecha Visita</label>
                   <input id="fecha_visita" type="date" name="fecha_visita" class="" value="{{ old('fecha_visita') }}"
-                  placeholder="fecha Visita">
+                    placeholder="fecha Visita">
                   @error('fecha_visita')
                   <span class="invalid-feedback" role="alert">
                     <strong style="color:red">{{ $message }}</strong>
@@ -166,15 +156,16 @@
                 </div>
 
 
-                
+
                 <label id="checkbox-masajes-container" class="input-field col s12 m3">
-                  <input  style="display: none" type="checkbox" id="agregar_masajes" name="agregar_masajes" />
+                  <input style="display: none" type="checkbox" id="agregar_masajes" name="agregar_masajes" />
                   <span>¿Desea agregar masajes?</span>
-                </label>  
+                </label>
 
 
                 <div class="input-field col s12 m3" id="input-cantidad-masajes-container">
-                  <input id="cantidad_masajes_extra" type="number" name="cantidad_masajes_extra" value="{{ old('cantidad_masajes_extra') }}">
+                  <input id="cantidad_masajes_extra" type="number" name="cantidad_masajes_extra"
+                    value="{{ old('cantidad_masajes_extra') }}">
                   <label for="cantidad_masajes_extra">Cantidad masajes extras</label>
                   @error('cantidad_masajes_extra')
                   <span class="invalid-feedback" role="alert">
@@ -183,7 +174,7 @@
                   @enderror
                 </div>
 
- 
+
 
 
               </div>
@@ -223,6 +214,8 @@
                   </button>
                 </div>
               </div>
+
+
             </form>
           </div>
         </div>
@@ -287,7 +280,7 @@ function calcularValorTotal(){
 
 
 <script>
-$(document).ready(function(e){
+  $(document).ready(function(e){
   const selectPrograma = $('#id_programa');
   const cantidadMasajesInput = $('#cantidad_masajes').closest('div');
   const checkboxMasajesContainer = $('#checkbox-masajes-container');
@@ -339,5 +332,6 @@ $(document).ready(function(e){
 
 
 </script>
+
 
 @endsection

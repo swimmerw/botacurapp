@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Mail\RegistroReservaMailable;
+use Illuminate\Support\Facades\Mail;
 
 class VisitaController extends Controller
 {
@@ -155,8 +157,10 @@ class VisitaController extends Controller
     {
 
         $sauna = null;
-        $tinaja = null;
         $masaje = null;
+        $visita = null;
+        $cliente = null;
+        $programa = $reserva->programa;
 
         if ($request->has('horario_sauna')) {
             $sauna = Carbon::CreateFromFormat('H:i', $request->input('horario_sauna'));
@@ -166,8 +170,12 @@ class VisitaController extends Controller
             $masaje = Carbon::CreateFromFormat('H:i', $request->input('horario_masaje'));
         }
 
+        
         try {
-            DB::transaction(function () use ($request, $reserva, $sauna, $masaje) {
+            DB::transaction(function () use ($request, &$reserva, $sauna, $masaje, &$visita, &$cliente) {
+                
+                $cliente = $reserva->cliente;
+
                 $visita = Visita::create([
                     'id_reserva' => $request->input('id_reserva'),
                     'trago_cortesia' => $request->input('trago_cortesia'),
@@ -196,8 +204,14 @@ class VisitaController extends Controller
                 }
         
             });
+
+            if ($cliente && $visita) {
+                Mail::to($cliente->correo)->send(new RegistroReservaMailable($visita, $reserva, $cliente, $programa)); 
+            }
+
             Alert::success('Éxito', 'Se ha generado la visita')->showConfirmButton();
             return redirect()->route('backoffice.reserva.show', ['reserva' => $request->input('id_reserva')]);
+
         } catch (\Exception $e) {
             Alert::error('Error', 'Ocurrió un problema al generar la visita. Intente nuevamente.')->showConfirmButton();
             return redirect()->back()->withInput();

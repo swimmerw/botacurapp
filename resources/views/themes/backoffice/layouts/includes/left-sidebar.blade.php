@@ -3,8 +3,7 @@
         <li class="user-details cyan darken-2">
             <div class="row">
                 <div class="col col s4 m4 l4">
-                    <img alt="" class="circle responsive-img valign profile-image cyan" src="/images/avatar/avatar-7.png">
-                    </img>
+                    <img alt="" class="circle responsive-img valign profile-image cyan" src="/images/avatar/avatar-7.png"/>
                 </div>
                 <div class="col col s8 m8 l8">
                     <ul class="dropdown-content" id="profile-dropdown-nav">
@@ -44,6 +43,8 @@
         </li>
         <li class="no-padding">
             <ul class="collapsible" data-collapsible="accordion">
+
+                @if(Auth::user()->has_role(config('app.admin_role')))
                 <li class="bold">
                     <a class="waves-effect waves-cyan" href="{{ route ('backoffice.admin.show') }}">
                         <i class="material-icons">
@@ -162,6 +163,21 @@
                         </span>
                     </a>
                 </li>
+
+                @endif
+
+                @if(Auth::user()->has_role(config('app.anfitriona_role')))
+                <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.reserva.index') }}">
+                        <i class="material-icons">
+                            assignment
+                        </i>
+                        <span class="nav-text">
+                            Reservas
+                        </span>
+                    </a>
+                </li>
+                @endif
 
             </ul>
         </li>

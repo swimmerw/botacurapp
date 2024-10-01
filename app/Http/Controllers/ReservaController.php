@@ -102,6 +102,9 @@ class ReservaController extends Controller
         // Buscar si el programa tiene un servicio de masaje
         $incluyeMasaje = $programa->servicios()->whereIn('nombre_servicio', ['Masaje', 'Masajes', 'masaje', 'masajes'])->exists();
 
+        try {
+
+
         // Iniciar la transacción
         DB::transaction(function () use ($request, &$reserva, $incluyeMasaje) {
 
@@ -149,7 +152,7 @@ class ReservaController extends Controller
                 'id_reserva' => $reserva->id,
                 'abono_programa' => $request->abono_programa,
                 'imagen_abono' => $url_abono,
-                'id_tipo_transaccion_abono' => $request->id_tipo_transaccion_abono,
+                'id_tipo_transaccion_abono' => $request->tipo_transaccion,
                 'total_pagar' => $request->total_pagar,
             ]);
 
@@ -197,6 +200,11 @@ class ReservaController extends Controller
         // Redirigir fuera de la transacción
         return redirect()->route('backoffice.reserva.visitas.create', ['reserva' => $reserva->id]);
 
+    } catch (\Error $e) {
+        Alert::error('Falló', 'Error: '.$e, 'Confirmar')->showConfirmButton();
+        return redirect()->back()->withInput();
+    }
+
     }
 
     /**
@@ -207,7 +215,7 @@ class ReservaController extends Controller
      */
     public function show(Reserva $reserva)
     {
-        $reserva->load('venta.consumos.detallesConsumos.producto');
+        $reserva->load('venta.consumos.detallesConsumos.producto', 'visitas.menus','visitas.menus.productoEntrada','visitas.menus.productoFondo','visitas.menus.productoacompanamiento');
 
         return view('themes.backoffice.pages.reserva.show', [
             'reserva' => $reserva,
