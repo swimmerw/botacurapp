@@ -101,11 +101,11 @@
 
       </div>
 
-
+      @if(Auth::user()->has_role(config('app.admin_role')))
       <div class="col s12 m4">
         @include('themes.backoffice.pages.reserva.includes.reagendamiento')
       </div>
-
+      @else
 
 
       <div class="col s12 m4">
@@ -318,7 +318,7 @@
 
       </div>
 
-
+      @if(Auth::user()->has_role(config('app.admin_role')))
       <div class="col s12 m4">
         @include('themes.backoffice.pages.reserva.includes.venta')
       </div>
@@ -328,7 +328,7 @@
       </div>
 
       @include('themes.backoffice.pages.reserva.includes.modal_venta')
-
+      @endif
     </div>
 
   </div>

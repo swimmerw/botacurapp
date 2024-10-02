@@ -92,9 +92,31 @@
 @section('foot')
 
 <script>
+    function eliminarServicio (id) { 
+        Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esta acción!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminarlo'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#servicio_' + id).remove();
+            Swal.fire(
+                'Eliminado',
+                'El servicio ha sido eliminado.',
+                'success'
+            );
+        }
+    });
+     }
+
     $(document).ready(function() {
         // Inicializar manualmente los tabs de Materialize
         var tabs = M.Tabs.init($('.tabs'));
+
 
         // Desasociar cualquier evento anterior y luego asociar el evento click
         $('.servicio').off('click').on('click', function(event) {
@@ -105,12 +127,17 @@
             var nombre = $(this).data('nombre');
             var precio = $(this).data('precio');
 
+
+
             // Verificar si el servicio ya fue seleccionado
             if ($('#servicio_' + id).length === 0) {
                 // Si no ha sido seleccionado, añadirlo a la lista de servicios seleccionados
                 $('#servicios_seleccionados').append(
                     '<div class="row" id="servicio_' + id + '">' +
-                        '<div class="col s4">' +
+                        '<div class="col s1">' +
+                            '<a href="javascript:void(0);" class="" onclick="eliminarServicio('+ id +')"><i class="material-icons" style="padding-top:25px; color:red;">clear</i></a>'+
+                        '</div>'+
+                        '<div class="col s3">' +
                             '<blockquote><h5>' + nombre + '</h5></blockquote>' +
                         '</div>' +
                         '<div class="col s4">' +
@@ -122,15 +149,16 @@
                         '</div>' +
                     '</div>'
                 );
+
             } else {
                 // Si ya fue seleccionado, simplemente ignorar o mostrar mensaje
                 // Swal.fire({
-                //     icon: 'warning',
-                //     title: 'Servicio ya seleccionado',
+                    //     icon: 'warning',
+                    //     title: 'Servicio ya seleccionado',
                 //     text: 'Este servicio ya ha sido agregado a la lista.',
                 //     confirmButtonText: 'OK'
                 // });
-
+                
                 const Toast = Swal.mixin({
                     toast: true,
                     position: "top",
@@ -142,14 +170,16 @@
                         toast.onmouseleave = Swal.resumeTimer;
                     }
                 });
-
+                
                 Toast.fire({
                     icon: "error",
                     title: "El servicio ya fue incorporado a la lista, agregue la cantidad"
                 });
-
+                
             }
+
         });
+
     });
 </script>
 

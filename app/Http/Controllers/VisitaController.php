@@ -155,24 +155,28 @@ class VisitaController extends Controller
      */
     public function store(Request $request, Reserva $reserva)
     {
-
         $sauna = null;
         $masaje = null;
+        $tipoMasaje = null;
         $visita = null;
         $cliente = null;
         $programa = $reserva->programa;
-
+        
         if ($request->has('horario_sauna')) {
             $sauna = Carbon::CreateFromFormat('H:i', $request->input('horario_sauna'));
         }
-
+        
         if ($request->has('horario_masaje')) {
             $masaje = Carbon::CreateFromFormat('H:i', $request->input('horario_masaje'));
         }
-
+        
+        if ($request->has('tipo_masaje')) {
+            $tipoMasaje = $request->tipo_masaje;
+        }
+        
         
         try {
-            DB::transaction(function () use ($request, &$reserva, $sauna, $masaje, &$visita, &$cliente) {
+            DB::transaction(function () use ($request, &$reserva, $sauna, $masaje, &$visita, &$cliente, $tipoMasaje) {
                 
                 $cliente = $reserva->cliente;
 
@@ -185,6 +189,7 @@ class VisitaController extends Controller
                     'id_lugar_masaje' => $request->input('id_lugar_masaje'),
                     'horario_sauna' => $sauna,
                     'horario_masaje' => $masaje,
+                    'tipo_masaje' => $tipoMasaje,
                 ]);
         
                 $tinaja = $visita->hora_fin_sauna;

@@ -3,7 +3,8 @@
         <li class="user-details cyan darken-2">
             <div class="row">
                 <div class="col col s4 m4 l4">
-                    <img alt="" class="circle responsive-img valign profile-image cyan" src="/images/avatar/avatar-7.png"/>
+                    <img alt="" class="circle responsive-img valign profile-image cyan"
+                        src="/images/avatar/avatar-7.png" />
                 </div>
                 <div class="col col s8 m8 l8">
                     <ul class="dropdown-content" id="profile-dropdown-nav">
@@ -33,7 +34,8 @@
                             </a>
                         </li>
                     </ul>
-                    <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" data-activates="profile-dropdown-nav" href="#">
+                    <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn"
+                        data-activates="profile-dropdown-nav" href="#">
                         {{Auth::user()->name}}
                         <i class="mdi-navigation-arrow-drop-down right"></i>
                     </a>
@@ -66,6 +68,10 @@
                         </span>
                     </a>
                 </li>
+                @endif
+
+                @if(Auth::user()->has_role(config('app.admin_role')) || Auth::user()->has_role(config('app.anfitriona_role')))
+
                 <li class="bold">
                     <a class="waves-effect waves-cyan" href="{{ route ('backoffice.reserva.index') }}">
                         <i class="material-icons">
@@ -76,6 +82,10 @@
                         </span>
                     </a>
                 </li>
+
+                @endif
+
+                @if(Auth::user()->has_role(config('app.admin_role')))
                 <li class="bold">
                     <a class="waves-effect waves-cyan" href="{{ route ('backoffice.programa.index') }}">
                         <i class="material-icons">
@@ -166,24 +176,14 @@
 
                 @endif
 
-                @if(Auth::user()->has_role(config('app.anfitriona_role')))
-                <li class="bold">
-                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.reserva.index') }}">
-                        <i class="material-icons">
-                            assignment
-                        </i>
-                        <span class="nav-text">
-                            Reservas
-                        </span>
-                    </a>
-                </li>
-                @endif
+
 
             </ul>
         </li>
     </ul>
 
-    <a class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only" data-activates="slide-out" href="#">
+    <a class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only"
+        data-activates="slide-out" href="#">
         <i class="material-icons">menu</i>
     </a>
 

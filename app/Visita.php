@@ -11,6 +11,7 @@ class Visita extends Model
         'horario_sauna',
         'horario_tinaja',
         'horario_masaje',
+        'tipo_masaje',
         'trago_cortesia',
         'alergias',
         'observacion',

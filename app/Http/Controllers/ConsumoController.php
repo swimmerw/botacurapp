@@ -36,7 +36,7 @@ class ConsumoController extends Controller
 
     function store_service(Request $request, Venta $venta) 
     {
-        dd($request);    
+        dd($venta->reserva->visitas);    
     }
 
     public function create($venta)

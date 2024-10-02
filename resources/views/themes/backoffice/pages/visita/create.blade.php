@@ -113,6 +113,35 @@
                                 </div>
 
 
+                                <div class="input-field col s12 m6 l4" @if(!in_array('Masaje', $servicios)) hidden
+                                @endif>
+
+                                <select id="tipo_masaje" name="tipo_masaje" @if(!in_array('Masaje',
+                                    $servicios)) disabled hidden @endif>
+
+                                    <option value="" disabled selected >-- Seleccione --</option>
+                                    <option value="Relajante" {{ old('tipo_masaje') == 'Relajante' ? 'selected'
+                                        : '' }}>
+                                        Relajante
+                                    </option>
+                                    <option value="Descontracturante" {{ old('tipo_masaje') == 'Descontracturante' ? 'selected'
+                                        : '' }}>
+                                        Descontracturante
+                                    </option>
+                                    
+
+
+                                </select>
+                                <label for="tipo_masaje">Tipo Masaje</label>
+                                @error('tipo_masaje')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong style="color:red">{{ $message }}</strong>
+                                </span>
+                                @enderror
+
+                            </div>
+
+
 
                                 <div class="input-field col s12 m6 l4">
 

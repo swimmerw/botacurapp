@@ -45,7 +45,9 @@ class ReservaController extends Controller
         $fechaActual = Carbon::now()->startOfDay();
 
         $reservas = Reserva::where('fecha_visita', '>=', $fechaActual)
-            ->with(['cliente', 'visitas', 'programa.servicios'])
+            ->with(['cliente', 'visitas'=>function($q){
+                $q->orderBy('horario_sauna', 'desc');
+            }, 'programa.servicios'])
             ->orderBy('fecha_visita')
             ->get();
         // ->groupBy(function ($reserva) {
@@ -163,18 +165,18 @@ class ReservaController extends Controller
                 $venta->update(['imagen_abono' => $finalPath]);
             }
 
-            $subtotal = 0;
-
-            if ($request->has('cantidad_masajes_extra')) {
+            
+            if ($request->filled('cantidad_masajes_extra')) {
                 $consumo = Consumo::create([
                     'id_venta' => $venta->id,
                     'subtotal' => 0,
                     'total_consumo' => 0,
                 ]);
-
+                
                 $servicioMasaje = Servicio::whereIn('nombre_servicio', ['Masaje', 'Masajes', 'masaje', 'masajes'])->first();
-
+                
                 if ($servicioMasaje) {
+                    $subtotal = 0;
                     $cantidadMasajesExtra = intval($request->input('cantidad_masajes_extra'));
                     $subtotalMasajes = $servicioMasaje->valor_servicio * $cantidadMasajesExtra;
                     $subtotal = $subtotalMasajes;
@@ -229,7 +231,7 @@ class ReservaController extends Controller
         // Verificar si el archivo de abono existe
         if (Storage::disk('imagen_abono')->exists($reserva->venta->imagen_abono)) {
             $file = Storage::disk('imagen_abono')->get($reserva->venta->imagen_abono);
-            $mimeType = Storage::disk('imagen_abono')->mimeType($reserva->venta->imagen_abono);
+            $mimeType = Storage::disk('imagen_abono')->Storage::mimeType($reserva->venta->imagen_abono);
 
             return response($file, 200)->header('Content-Type', $mimeType);
         }
@@ -244,7 +246,7 @@ class ReservaController extends Controller
         // Verificar si el archivo de diferencia existe
         if (Storage::disk('imagen_diferencia')->exists($reserva->venta->imagen_diferencia)) {
             $file = Storage::disk('imagen_diferencia')->get($reserva->venta->imagen_diferencia);
-            $mimeType = Storage::disk('imagen_diferencia')->mimeType($reserva->venta->imagen_diferencia);
+            $mimeType = Storage::disk('imagen_diferencia')->Storage::mimeType($reserva->venta->imagen_diferencia);
 
             return response($file, 200)->header('Content-Type', $mimeType);
         }

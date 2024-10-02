@@ -6736,6 +6736,8 @@ ul.side-nav .collapsible-header.active:after {
   margin-top: -16px;
   font-size: 13px;
   text-shadow: 1px 1px 1px #444;
+  margin: 0;
+  padding: 0;
 }
 
 .user-details .row {

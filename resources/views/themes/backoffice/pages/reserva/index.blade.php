@@ -29,14 +29,14 @@
                                 </thead>
                                 <tbody>
                                     @foreach($reservas as $reserva)
-                                    @foreach ($reserva->visitas as $visita)
+                                    @foreach ($reserva->visitas->sortBy('horario_sauna') as $visita)
                                     @if ($visita->horario_sauna)
                                     <tr>
                                         <td>
                                             <a href="{{ route('backoffice.reserva.show', $reserva) }}">
                                                 {{ $visita->horario_sauna }} - {{ $visita->hora_fin_sauna }}
                                                 <strong>{{ addslashes($reserva->cliente->nombre_cliente) }} -</strong>
-                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }}
+                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }} - {{$visita->ubicacion->nombre}}
                                             </a>
                                         </td>
                                     </tr>
@@ -65,7 +65,7 @@
                                             <a href="{{ route('backoffice.reserva.show', $reserva) }}">
                                                 {{ $visita->horario_tinaja }} - {{ $visita->hora_fin_tinaja }}
                                                 <strong>{{ addslashes($reserva->cliente->nombre_cliente) }} -</strong>
-                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }}
+                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }} - {{$visita->ubicacion->nombre}}
                                             </a>
                                         </td>
                                     </tr>
@@ -94,7 +94,7 @@
                                             <a href="{{ route('backoffice.reserva.show', $reserva) }}">
                                                 {{ $visita->horario_masaje }} - {{ $visita->hora_fin_masaje }}
                                                 <strong>{{ addslashes($reserva->cliente->nombre_cliente) }} -</strong>
-                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }}
+                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }} - {{$visita->ubicacion->nombre}}
                                             </a>
                                         </td>
                                     </tr>

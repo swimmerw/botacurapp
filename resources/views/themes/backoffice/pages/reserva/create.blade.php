@@ -319,6 +319,7 @@ function calcularValorTotal(){
       inputCantidadMasajesContainer.show(); // Mostrar el input de cantidad si el checkbox está marcado
     } else {
       inputCantidadMasajesContainer.hide(); // Ocultar el input si el checkbox está desmarcado
+      cantidadMasajesExtraInput.val('');
     }
   });
 
