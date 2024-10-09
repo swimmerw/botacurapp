@@ -10,6 +10,7 @@ use App\Programa;
 use App\Reserva;
 use App\Servicio;
 use App\TipoTransaccion;
+use App\User;
 use App\Venta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -45,9 +46,7 @@ class ReservaController extends Controller
         $fechaActual = Carbon::now()->startOfDay();
 
         $reservas = Reserva::where('fecha_visita', '>=', $fechaActual)
-            ->with(['cliente', 'visitas'=>function($q){
-                $q->orderBy('horario_sauna', 'desc');
-            }, 'programa.servicios'])
+            ->with(['cliente', 'visitas', 'programa.servicios'])
             ->orderBy('fecha_visita')
             ->get();
         // ->groupBy(function ($reserva) {
@@ -78,6 +77,7 @@ class ReservaController extends Controller
      */
     public function create($cliente)
     {
+        $this->authorize('create',User::class);
         $cliente = Cliente::findOrFail($cliente);
         $programas = Programa::with('servicios')->get();
         $tipos = TipoTransaccion::all();
@@ -97,6 +97,7 @@ class ReservaController extends Controller
      */
     public function store(StoreRequest $request, Reserva $reserva)
     {
+        $masajesExtra = null;
 
         // Verificar si el programa seleccionado incluye un masaje
         $programa = Programa::find($request->id_programa);
@@ -108,7 +109,7 @@ class ReservaController extends Controller
 
 
         // Iniciar la transacción
-        DB::transaction(function () use ($request, &$reserva, $incluyeMasaje) {
+        DB::transaction(function () use ($request, &$reserva, $incluyeMasaje, &$masajesExtra) {
 
             // Asignar el id del cliente con la reserva
             if ($request->has('cliente_id')) {
@@ -165,8 +166,12 @@ class ReservaController extends Controller
                 $venta->update(['imagen_abono' => $finalPath]);
             }
 
+
             
             if ($request->filled('cantidad_masajes_extra')) {
+
+                $masajesExtra = $request->filled('cantidad_masajes_extra');
+
                 $consumo = Consumo::create([
                     'id_venta' => $venta->id,
                     'subtotal' => 0,
@@ -193,11 +198,14 @@ class ReservaController extends Controller
                     $consumo->save();
                 }
 
+
             }
         });
 
         // Mostrar alerta de éxito
         Alert::success('Éxito', 'Reserva realizada con éxito', 'Confirmar')->showConfirmButton();
+
+        session()->put('masajesExtra', $masajesExtra);
 
         // Redirigir fuera de la transacción
         return redirect()->route('backoffice.reserva.visitas.create', ['reserva' => $reserva->id]);

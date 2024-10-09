@@ -18,7 +18,12 @@ class ClientePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        // return $user->has_permission('index-cliente');
+    }
+
+    public function index(User $user)
+    {
+        return $user->has_permission('index-cliente');
     }
 
     /**
@@ -30,7 +35,7 @@ class ClientePolicy
      */
     public function view(User $user, Cliente $cliente)
     {
-        //
+        return $user->has_permission('view-cliente',$cliente);
     }
 
     /**

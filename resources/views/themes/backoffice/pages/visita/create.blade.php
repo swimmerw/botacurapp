@@ -88,11 +88,11 @@
                                     @enderror
                                 </div> --}}
 
-                                <div class="input-field col s12 m6 l4" @if(!in_array('Masaje', $servicios)) hidden
+                                <div class="input-field col s12 m6 l4" @if(!in_array('Masaje', $servicios) && !$masajesExtra) style="display: none;"
                                     @endif>
 
                                     <select id="horario_masaje" name="horario_masaje" @if(!in_array('Masaje',
-                                        $servicios)) disabled hidden @endif>
+                                        $servicios) && !$masajesExtra) disabled hidden @endif>
 
                                         <option value="" selected disabled="">-- Seleccione --</option>
                                         @foreach($horasMasaje as $horario)
@@ -112,12 +112,11 @@
 
                                 </div>
 
-
-                                <div class="input-field col s12 m6 l4" @if(!in_array('Masaje', $servicios)) hidden
+                                <div class="input-field col s12 m6 l4" @if(!in_array('Masaje', $servicios) && !$masajesExtra) style="display: none;"
                                 @endif>
 
                                 <select id="tipo_masaje" name="tipo_masaje" @if(!in_array('Masaje',
-                                    $servicios)) disabled hidden @endif>
+                                    $servicios) && !$masajesExtra) disabled hidden @endif>
 
                                     <option value="" disabled selected >-- Seleccione --</option>
                                     <option value="Relajante" {{ old('tipo_masaje') == 'Relajante' ? 'selected'
@@ -184,8 +183,11 @@
                                     @enderror
                                     <label for="id_ubicacion">Ubicación</label>
                                 </div>
-                                <div class="input-field col s12 m6 l4">
-                                    <select name="id_lugar_masaje" id="id_lugar_masaje">
+
+                                <div class="input-field col s12 m6 l4" @if(!in_array('Masaje', $servicios) && !$masajesExtra) style="display: none;"
+                                @endif>
+                                    <select name="id_lugar_masaje" id="id_lugar_masaje" @if(!in_array('Masaje',
+                                    $servicios) && !$masajesExtra) disabled hidden @endif>
                                         <option value="" selected disabled="">-- Seleccione --</option>
                                         @foreach ($lugares as $lugar)
                                         <option value="{{$lugar->id}}" {{ old('id_lugar_masaje')==$lugar->nombre ?
@@ -268,6 +270,7 @@
                                             <strong style="color:red">{{ $message }}</strong>
                                         </span>
                                         @enderror
+                                        <label for="id_producto_fondo_{{ $i }}">Fondo</label>
                                     </div>
 
 
@@ -283,6 +286,7 @@
                                             <strong style="color:red">{{ $message }}</strong>
                                         </span>
                                         @enderror
+                                        <label for="id_producto_acompanamiento_{{ $i }}">Acompañamiento</label>
                                     </div>
 
 

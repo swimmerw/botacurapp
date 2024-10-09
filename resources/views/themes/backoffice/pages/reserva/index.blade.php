@@ -20,7 +20,8 @@
                 <h5>Reservas: {{ $fecha }}</h5>
                 <div class="row">
                     <div class="col s12 m6 l4">
-                        <div class="card-panel animate__animated animate__backInDown" style="--animate-delay: 1s; --animate-duration: 2s; ">
+                        <div class="card-panel animate__animated animate__backInDown"
+                            style="--animate-delay: 1s; --animate-duration: 2s; ">
                             <table class="highlight">
                                 <thead>
                                     <tr>
@@ -34,9 +35,17 @@
                                     <tr>
                                         <td>
                                             <a href="{{ route('backoffice.reserva.show', $reserva) }}">
-                                                {{ $visita->horario_sauna }} - {{ $visita->hora_fin_sauna }}
+                                                <strong style="color:#FF4081;">{{ $visita->horario_sauna }} - {{
+                                                    $visita->hora_fin_sauna }}</strong>
                                                 <strong>{{ addslashes($reserva->cliente->nombre_cliente) }} -</strong>
-                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }} - {{$visita->ubicacion->nombre}}
+                                                {{$visita->ubicacion->nombre}} -
+                                                {{ $reserva->programa->nombre_programa }} -
+                                                {{ $reserva->cantidad_personas }} personas -
+                                                @if (is_null($reserva->observacion))
+                                                Sin Observaciones
+                                                @else
+                                                <strong style="color:#FF4081;">{{$reserva->observacion}}</strong>
+                                                @endif
                                             </a>
                                         </td>
                                     </tr>
@@ -49,7 +58,8 @@
                     </div>
 
                     <div class="col s12 m6 l4">
-                        <div class="card-panel animate__animated animate__backInDown" style="--animate-delay: 2s; --animate-duration: 2s; ">
+                        <div class="card-panel animate__animated animate__backInDown"
+                            style="--animate-delay: 2s; --animate-duration: 2s; ">
                             <table class="highlight">
                                 <thead>
                                     <tr>
@@ -63,9 +73,17 @@
                                     <tr>
                                         <td>
                                             <a href="{{ route('backoffice.reserva.show', $reserva) }}">
-                                                {{ $visita->horario_tinaja }} - {{ $visita->hora_fin_tinaja }}
+                                                <strong style="color:#FF4081;">{{ $visita->horario_tinaja }} - {{
+                                                    $visita->hora_fin_tinaja }}</strong>
                                                 <strong>{{ addslashes($reserva->cliente->nombre_cliente) }} -</strong>
-                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }} - {{$visita->ubicacion->nombre}}
+                                                {{$visita->ubicacion->nombre}} -
+                                                {{ $reserva->programa->nombre_programa }} -
+                                                {{ $reserva->cantidad_personas }} personas -
+                                                @if (is_null($reserva->observacion))
+                                                Sin Observaciones
+                                                @else
+                                                <strong style="color:#FF4081;">{{$reserva->observacion}}</strong>
+                                                @endif
                                             </a>
                                         </td>
                                     </tr>
@@ -78,7 +96,8 @@
                     </div>
 
                     <div class="col s12 m6 l4">
-                        <div class="card-panel animate__animated animate__backInDown" style="--animate-delay: 3s; --animate-duration: 2s; ">
+                        <div class="card-panel animate__animated animate__backInDown"
+                            style="--animate-delay: 3s; --animate-duration: 2s; ">
                             <table class="highlight">
                                 <thead>
                                     <tr>
@@ -92,9 +111,27 @@
                                     <tr>
                                         <td>
                                             <a href="{{ route('backoffice.reserva.show', $reserva) }}">
-                                                {{ $visita->horario_masaje }} - {{ $visita->hora_fin_masaje }}
-                                                <strong>{{ addslashes($reserva->cliente->nombre_cliente) }} -</strong>
-                                                {{ $reserva->cantidad_personas }} personas - {{ $reserva->programa->nombre_programa }} - {{$visita->ubicacion->nombre}}
+                                                <strong style="color: #FF4081">{{ $visita->horario_masaje }} - {{
+                                                    $visita->hora_fin_masaje }}</strong>
+                                                <strong>{{ $reserva->cliente->nombre_cliente }} -</strong>
+                                                {{$visita->ubicacion->nombre}} -
+                                                {{ $reserva->programa->nombre_programa }} -
+                                                {{ $reserva->cantidad_personas }} personas -
+                                                @if (is_null($reserva->observacion))
+                                                Sin Observaciones
+                                                @else
+                                                <strong style="color:#FF4081;">{{$reserva->observacion}}</strong>
+                                                @endif
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @elseif (is_null($visita->horario_masaje))
+
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('backoffice.reserva.show', $reserva) }}">
+                                                <strong>{{ $reserva->cliente->nombre_cliente }} -</strong> No registra
+                                                masaje
                                             </a>
                                         </td>
                                     </tr>

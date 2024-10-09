@@ -20,7 +20,8 @@ class AuthServiceProvider extends ServiceProvider
         'App\User'=>'App\Policies\UserPolicy',
         'App\Programa' =>'App\Policies\ProgramaPolicy',
         'App\Servicio' =>'App\Policies\ServicioPolicy',
-        'App\Cliente' =>'App\Policies\ClientePolicy'
+        'App\Cliente' =>'App\Policies\ClientePolicy',
+        'App\Reserva' =>'App\Policies\ReservaPolicy',
     ];
 
     /**

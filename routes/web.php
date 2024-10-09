@@ -156,6 +156,13 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
         return view('themes.backoffice.pages.tipo_producto.edit', compact('producto'));
     })->name('tipo_producto.edit');
 
+
+    Route::get('/generar-pdf/{reserva}', 'ClienteController@generarPDF')->name('cliente.pdf');
+
+
+    Route::get('/visita/masajes', 'VisitaController@masajeindex')->name('visita.masajes');
+
+
     // Metodos Reservas
     // Index - Mostrar una lista de reservas
     Route::get('venta/{venta}/consumo', 'ConsumoController@create_service')->name('venta.consumo.create_service');
@@ -183,4 +190,5 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::resource('servicio', 'ServicioController');
     Route::resource('venta.consumo', 'ConsumoController');
     Route::resource('visita', 'VisitaController');
+    Route::resource('menu', 'MenuController');
 });

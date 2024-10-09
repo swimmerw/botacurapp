@@ -28,10 +28,11 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a class="grey-text text-darken-1" href="#">
-                                <i class="material-icons">keyboard_tab</i>
-                                Salir
-                            </a>
+                            <a class="grey-text text-darken-1" href="{{ route('logout') }}" onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+                                      <i class="material-icons">keyboard_tab</i>
+                                      {{ __('Logout') }}
+                                  </a>
                         </li>
                     </ul>
                     <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn"
@@ -106,40 +107,6 @@
                         </span>
                     </a>
                 </li>
-                <li class="bold">
-                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.user.index') }}">
-                        <i class="material-icons">
-                            people
-                        </i>
-                        <span class="nav-text">
-                            Usuarios del Sistema
-                        </span>
-                    </a>
-                </li>
-
-
-
-                <li class="bold">
-                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.role.index') }}">
-                        <i class="material-icons">
-                            perm_identity
-                        </i>
-                        <span class="nav-text">
-                            Roles del Sistema
-                        </span>
-                    </a>
-                </li>
-
-                <li class="bold">
-                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.permission.index') }}">
-                        <i class="material-icons">
-                            vpn_key
-                        </i>
-                        <span class="nav-text">
-                            Permisos del Sistema
-                        </span>
-                    </a>
-                </li>
 
                 <li class="bold">
                     <a class="waves-effect waves-cyan" href="{{ route ('backoffice.insumo.index') }}">
@@ -159,6 +126,72 @@
                         </i>
                         <span class="nav-text">
                             Productos
+                        </span>
+                    </a>
+                </li>
+                @endif
+
+
+                @if (Auth::user()->has_role(config('app.cocina_role')) || Auth::user()->has_role(config('app.garzon_role')) || Auth::user()->has_role(config('app.admin_role')))
+                <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.menu.index') }}">
+                        <i class="material-icons">
+                            restaurant
+                        </i>
+                        <span class="nav-text">
+                            Menús
+                        </span>
+                    </a>
+                </li>
+                @endif
+
+                @if(Auth::user()->has_role(config('app.admin_role')) || Auth::user()->has_role(config('app.masoterapeuta_role')))
+
+                <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.visita.masajes') }}">
+                        <i class="material-icons">
+                            airline_seat_flat
+                        </i>
+                        <span class="nav-text">
+                            Masajes
+                        </span>
+                    </a>
+                </li>
+
+                @endif
+                
+                
+                @if (Auth::user()->has_role(config('app.admin_role')))
+
+                <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.user.index') }}">
+                        <i class="material-icons">
+                            people
+                        </i>
+                        <span class="nav-text">
+                            Usuarios del Sistema
+                        </span>
+                    </a>
+                </li>
+
+                <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.role.index') }}">
+                        <i class="material-icons">
+                            perm_identity
+                        </i>
+                        <span class="nav-text">
+                            Roles del Sistema
+                        </span>
+                    </a>
+                </li>
+
+                <li class="bold">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.permission.index') }}">
+                        <i class="material-icons">
+                            vpn_key
+                        </i>
+                        <span class="nav-text">
+                            Permisos del Sistema
                         </span>
                     </a>
                 </li>
@@ -187,4 +220,8 @@
         <i class="material-icons">menu</i>
     </a>
 
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
 </aside>

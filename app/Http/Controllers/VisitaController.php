@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\LugarMasaje;
+use App\Mail\RegistroReservaMailable;
 use App\Menu;
 use App\Producto;
 use App\Reserva;
@@ -11,10 +12,8 @@ use App\Visita;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\TryCatch;
-use RealRashid\SweetAlert\Facades\Alert;
-use App\Mail\RegistroReservaMailable;
 use Illuminate\Support\Facades\Mail;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class VisitaController extends Controller
 {
@@ -60,6 +59,8 @@ class VisitaController extends Controller
      */
     public function create($reserva)
     {
+        $masajesExtra = session()->get('masajesExtra');
+
         $reserva = Reserva::findOrFail($reserva);
         $serviciosDisponibles = $reserva->programa->servicios->pluck('nombre_servicio')->toArray();
 
@@ -144,6 +145,7 @@ class VisitaController extends Controller
             'entradas' => $entradas,
             'fondos' => $fondos,
             'acompañamientos' => $acompañamientos,
+            'masajesExtra' => $masajesExtra,
         ]);
     }
 
@@ -161,23 +163,22 @@ class VisitaController extends Controller
         $visita = null;
         $cliente = null;
         $programa = $reserva->programa;
-        
+
         if ($request->has('horario_sauna')) {
             $sauna = Carbon::CreateFromFormat('H:i', $request->input('horario_sauna'));
         }
-        
+
         if ($request->has('horario_masaje')) {
             $masaje = Carbon::CreateFromFormat('H:i', $request->input('horario_masaje'));
         }
-        
+
         if ($request->has('tipo_masaje')) {
             $tipoMasaje = $request->tipo_masaje;
         }
-        
-        
+
         try {
             DB::transaction(function () use ($request, &$reserva, $sauna, $masaje, &$visita, &$cliente, $tipoMasaje) {
-                
+
                 $cliente = $reserva->cliente;
 
                 $visita = Visita::create([
@@ -191,14 +192,14 @@ class VisitaController extends Controller
                     'horario_masaje' => $masaje,
                     'tipo_masaje' => $tipoMasaje,
                 ]);
-        
+
                 $tinaja = $visita->hora_fin_sauna;
-        
+
                 $visita->update([
                     'horario_tinaja' => $tinaja,
                 ]);
 
-                foreach($request->menus as $menu) {
+                foreach ($request->menus as $menu) {
                     Menu::create([
                         'id_visita' => $visita->id,
                         'id_producto_entrada' => $menu['id_producto_entrada'],
@@ -207,21 +208,23 @@ class VisitaController extends Controller
                         'observacion' => $menu['observacion'],
                     ]);
                 }
-        
+
             });
 
             if ($cliente && $visita) {
-                Mail::to($cliente->correo)->send(new RegistroReservaMailable($visita, $reserva, $cliente, $programa)); 
+                Mail::to($cliente->correo)->send(new RegistroReservaMailable($visita, $reserva, $cliente, $programa));
             }
 
             Alert::success('Éxito', 'Se ha generado la visita')->showConfirmButton();
+
+            session()->forget('masajesExtra');
+
             return redirect()->route('backoffice.reserva.show', ['reserva' => $request->input('id_reserva')]);
 
         } catch (\Exception $e) {
             Alert::error('Error', 'Ocurrió un problema al generar la visita. Intente nuevamente.')->showConfirmButton();
             return redirect()->back()->withInput();
         }
-
 
     }
 
@@ -268,5 +271,38 @@ class VisitaController extends Controller
     public function destroy(Visita $visita)
     {
         //
+    }
+
+    public function masajeindex()
+    {
+        // Asignacion de dias Hoy y Mañana
+        $hoy = Carbon::today();
+        $manana = Carbon::tomorrow();
+
+        // Filtrar las reservas que tienen visitas y cuya fecha de visita es hoy o mañana
+        $reservas = Reserva::with('visitas', 'cliente', 'programa', 'user')
+            ->whereBetween('fecha_visita', [$hoy, $manana])
+            ->get();
+
+        // Ordenar las reservas por horario_masaje de la visita
+        $reservas = $reservas->sortBy(function ($reserva) {
+            return optional($reserva->visitas->first())->horario_masaje;
+        });
+
+        // Filtrar por visitas de Hoy
+        $reservasHoy = $reservas->filter(function ($reserva) use ($hoy) {
+            return Carbon::parse($reserva->fecha_visita)->isSameDay($hoy);
+        });
+
+        // Filtrar por visitas de Mañana
+        $reservasManana = $reservas->filter(function ($reserva) use ($manana) {
+            return Carbon::parse($reserva->fecha_visita)->isSameDay($manana);
+        });
+
+        //Retorno de la vista
+        return view('themes.backoffice.pages.masaje.index', [
+            'reservasHoy' => $reservasHoy,
+            'reservasManana' => $reservasManana,
+        ]);
     }
 }

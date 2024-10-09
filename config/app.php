@@ -8,7 +8,8 @@ return [
     'anfitriona_role'=>env('ANFITRIONA_ROLE', 'anfitriona'),
     'barman_role'=>env('BARMAN_ROLE', 'barman'),
     'cajera_role'=>env('CAJERA_ROLE','cajera'),
-    'cocinera_role'=>env('COCINERA_ROLE','cocinera'),
+    'cocina_role'=>env('COCINA_ROLE','cocina'),
+    'garzon_role'=>env('GARZON_ROLE','garzon'),
     'masoterapeuta_role'=>env('MASO_ROLE', 'masoterapeuta'),
     'compra_role'=>env('COMPRA_ROLE','comprador'),
     'mantencion_role'=>env('MANTENCION_ROLE','mantencion'),
@@ -177,6 +178,7 @@ return [
          * Package Service Providers...
          */
         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -225,6 +227,7 @@ return [
         'Mail' => Illuminate\Support\Facades\Mail::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
         'Password' => Illuminate\Support\Facades\Password::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
         'Queue' => Illuminate\Support\Facades\Queue::class,
         'Redirect' => Illuminate\Support\Facades\Redirect::class,
         'Redis' => Illuminate\Support\Facades\Redis::class,

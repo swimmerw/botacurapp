@@ -17,11 +17,13 @@
 
 @section('content')
 <div class="section">
-  <p class="caption"><strong>Fecha de reserva:</strong> {{ $reserva->fecha_visita }}</p>
+  <p class="caption" style="margin-bottom: 0"><strong>Fecha de reserva:</strong> {{ $reserva->fecha_visita }}</p>
   <div class="divider"></div>
-  <div id="basic-form" class="section">
+  <div id="basic-form" class="section" style="padding-top: 0">
     <div class="row">
       <div class="col s12 m8">
+
+        @if(Auth::user()->has_role(config('app.admin_role')))
         {{-- TABLA CLIENTE --}}
         <div class="card">
           <div class="card-content">
@@ -99,6 +101,68 @@
           </div>
         </div>
 
+        @elseif (Auth::user()->has_role(config('app.anfitriona_role')))
+        
+        <div class="col s12 m12">
+          <ul id="projects-collection" class="collection z-depth-1">
+            <li class="collection-item avatar">
+              <i class="material-icons light-blue darken-4 circle">restaurant_menu</i>
+              <h6 class="collection-header m-0">Menú</h6>
+              <p>Selecciones</p>
+            </li>
+
+
+            <table class="responsive-table">
+              <thead>
+                <tr>
+                  <th>Menú</th>
+                  <th>Entrada</th>
+                  <th>Fondo</th>
+                  <th>Acompañamiento</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                @foreach($reserva->visitas as $visita)
+                @foreach($visita->menus as $index => $menu)
+                <tr>
+
+
+                  <td>
+                    <strong>Menú {{$index + 1}}:</strong>
+                  </td>
+                  <td>
+                    {{ $menu->productoEntrada->nombre }}
+                  </td>
+                  <td>
+
+                    {{ $menu->productoFondo->nombre }}
+                  </td>
+                  <td>
+
+                    {{ $menu->productoAcompanamiento->nombre }}
+                  </td>
+                  
+                    @if ($menu->observacion == null)
+                      <td> No Registra</td>
+                    @endif
+                    <td style="color: red">{{ $menu->observacion }}</td>
+
+                </tr>
+                @endforeach
+                @endforeach
+
+
+              </tbody>
+            </table>
+
+
+          </ul>
+        </div>
+
+        @endif
+
       </div>
 
       @if(Auth::user()->has_role(config('app.admin_role')))
@@ -166,7 +230,11 @@
                   <h6>Aún no se registra la visita para esta reserva</h6>
                   @else
                   @foreach ($reserva->visitas as $visita)
-                  <p>{{$visita->lugarMasaje->nombre}} - {{$visita->ubicacion->nombre}}</p>
+                  <p>@if (is_null($visita->id_lugar_masaje))
+                    No Registra Masajes
+                  @else
+                    {{$visita->lugarMasaje->nombre}}
+                  @endif - {{$visita->ubicacion->nombre}}</p>
                 </li>
 
 
@@ -238,6 +306,29 @@
                 @endif
 
 
+                @if(!$reserva->programa->servicios->contains('nombre_servicio', 'Masaje') && $visita->horario_masaje)
+                <li class="collection-item">
+                  <div class="row">
+                    <div class="col s7">
+                      <p class="collections-title">Masaje extra: <strong id="horario-masaje"
+                          data-fecha="{{ $reserva->fecha_visita }}" data-inicio="{{ $visita->horario_masaje }}"
+                          data-fin="{{ $visita->hora_fin_masaje_extra }}">{{ $visita->horario_masaje }}</strong></p>
+                      <p class="collections-content">Hora Fin: <strong name="masaje" id="masaje"
+                          data-masaje="duracion-masaje">{{ $visita->hora_fin_masaje_extra }}</strong></p>
+                    </div>
+                    <div class="col s3">
+                      <span class="task-cat" id="task-cat-masaje">Pendiente</span>
+                    </div>
+                    <div class="col s3">
+                      <div class="progress">
+                        <div class="determinate" id="progress-masaje" style="width: 0%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                @endif
+
+
                 @endforeach
                 @endif
 
@@ -249,6 +340,7 @@
 
 
             {{-- Menus --}}
+            @if(Auth::user()->has_role(config('app.admin_role')))
             <div class="col s12 m12">
               <ul id="projects-collection" class="collection z-depth-1">
                 <li class="collection-item avatar">
@@ -306,6 +398,7 @@
     
               </ul>
             </div>
+            @endif
 
 
           </div>

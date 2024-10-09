@@ -3,7 +3,9 @@
 /public/storage
 /storage/*.key
 /vendor
+/tests
 .env
+.env.testing
 .env.backup
 .phpunit.result.cache
 Homestead.json
@@ -16,3 +18,4 @@ yarn-error.log
 **/*.DS_Store
 /resources/views/themes/backoffice/pages/reserva/OLDindex.blade.php
 /storage/imagenes
+phpunit.xml*

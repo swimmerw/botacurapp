@@ -79,12 +79,30 @@ class Visita extends Model
         return $this->calcularHoraFin($this->horario_masaje, ['Masaje', 'Masajes']);
     }
 
+    public function getHoraFinMasajeExtraAttribute()
+    {
+        return $this->calcularHoraFinMasajeExtra($this->horario_masaje);
+    }
+
     private function calcularHoraFin($horarioInicio, $nombreServicio)
     {
 
         $servicio = $this->reserva->programa->servicios->first(function ($servicio) use ($nombreServicio) {
             return in_array($servicio->nombre_servicio, $nombreServicio);
         });
+        if ($horarioInicio && $servicio) {
+            $horaInicio = Carbon::parse($horarioInicio);
+            return $horaInicio->addMinutes($servicio->duracion)->format('H:i');
+        }
+
+        return null;
+    }
+
+    private function calcularHoraFinMasajeExtra($horarioInicio) {
+        $nombreServicio = ['Masaje', 'Masajes'];
+
+        $servicio = Servicio::whereIn('nombre_servicio',$nombreServicio)->first();
+
         if ($horarioInicio && $servicio) {
             $horaInicio = Carbon::parse($horarioInicio);
             return $horaInicio->addMinutes($servicio->duracion)->format('H:i');
