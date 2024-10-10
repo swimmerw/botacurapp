@@ -148,7 +148,7 @@
                 @if(Auth::user()->has_role(config('app.admin_role')) || Auth::user()->has_role(config('app.masoterapeuta_role')))
 
                 <li class="bold">
-                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.visita.masajes') }}">
+                    <a class="waves-effect waves-cyan" href="{{ route ('backoffice.masaje.index') }}">
                         <i class="material-icons">
                             airline_seat_flat
                         </i>

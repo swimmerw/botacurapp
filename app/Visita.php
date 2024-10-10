@@ -37,8 +37,14 @@ class Visita extends Model
         return $this->belongsTo(LugarMasaje::class, 'id_lugar_masaje');
     }
 
-    public function menus(){
+    public function menus()
+    {
         return $this->hasMany(Menu::class, 'id_visita');
+    }
+
+    public function masajes()
+    {
+        return $this->hasMany(Masaje::class, 'id_visita');
     }
 
     //ALMACENAMIENTO
@@ -98,10 +104,11 @@ class Visita extends Model
         return null;
     }
 
-    private function calcularHoraFinMasajeExtra($horarioInicio) {
+    private function calcularHoraFinMasajeExtra($horarioInicio)
+    {
         $nombreServicio = ['Masaje', 'Masajes'];
 
-        $servicio = Servicio::whereIn('nombre_servicio',$nombreServicio)->first();
+        $servicio = Servicio::whereIn('nombre_servicio', $nombreServicio)->first();
 
         if ($horarioInicio && $servicio) {
             $horaInicio = Carbon::parse($horarioInicio);

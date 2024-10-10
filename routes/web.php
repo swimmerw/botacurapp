@@ -52,6 +52,7 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     // Route::get('role', 'RoleController@index')->name('role.index');
     // Route::get('home','AdminController@show')->name('admin.show');
     Route::get('home', 'AdminController@show')->name('admin.show');
+    Route::get('home/masajes', 'AdminController@index')->name('admin.index');
 
     Route::resource('user', 'UserController');
     Route::get('user/{user}/assign_role', 'UserController@assign_role')->name('user.assign_role');
@@ -160,23 +161,22 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::get('/generar-pdf/{reserva}', 'ClienteController@generarPDF')->name('cliente.pdf');
 
 
-    Route::get('/visita/masajes', 'VisitaController@masajeindex')->name('visita.masajes');
-
-
+    
+    
     // Metodos Reservas
     // Index - Mostrar una lista de reservas
     Route::get('venta/{venta}/consumo', 'ConsumoController@create_service')->name('venta.consumo.create_service');
     // Route::get('reserva/{reserva}/diferencia', 'ReservaController@showDiferenciaImage')->name('reserva.diferencia.imagen');
-
+    
     // // Create - Ingresa al formulario para nueva reserva
     // Route::get('reserva/create/{cliente}', 'ReservaController@create')->name('reserva.create');
-
+    
     // Store - Guardar la nueva reserva
     Route::post('venta/{venta}/consumo', 'ConsumoController@store_service')->name('venta.consumo.store_service');
-
+    
     // // Show - Mostrar una reserva específica
     // Route::get('reserva/{reserva}', 'ReservaController@show')->name('reserva.show');
-
+    
     Route::resource('cliente', 'ClienteController');
     Route::resource('complemento', 'ComplementoController');
     Route::resource('insumo', 'InsumoController');
@@ -191,4 +191,5 @@ Route::group(['middleware' => ['auth'], 'as' => 'backoffice.'], function () {
     Route::resource('venta.consumo', 'ConsumoController');
     Route::resource('visita', 'VisitaController');
     Route::resource('menu', 'MenuController');
+    Route::resource('masaje', 'MasajeController');
 });

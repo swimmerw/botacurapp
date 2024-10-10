@@ -273,36 +273,4 @@ class VisitaController extends Controller
         //
     }
 
-    public function masajeindex()
-    {
-        // Asignacion de dias Hoy y Mañana
-        $hoy = Carbon::today();
-        $manana = Carbon::tomorrow();
-
-        // Filtrar las reservas que tienen visitas y cuya fecha de visita es hoy o mañana
-        $reservas = Reserva::with('visitas', 'cliente', 'programa', 'user')
-            ->whereBetween('fecha_visita', [$hoy, $manana])
-            ->get();
-
-        // Ordenar las reservas por horario_masaje de la visita
-        $reservas = $reservas->sortBy(function ($reserva) {
-            return optional($reserva->visitas->first())->horario_masaje;
-        });
-
-        // Filtrar por visitas de Hoy
-        $reservasHoy = $reservas->filter(function ($reserva) use ($hoy) {
-            return Carbon::parse($reserva->fecha_visita)->isSameDay($hoy);
-        });
-
-        // Filtrar por visitas de Mañana
-        $reservasManana = $reservas->filter(function ($reserva) use ($manana) {
-            return Carbon::parse($reserva->fecha_visita)->isSameDay($manana);
-        });
-
-        //Retorno de la vista
-        return view('themes.backoffice.pages.masaje.index', [
-            'reservasHoy' => $reservasHoy,
-            'reservasManana' => $reservasManana,
-        ]);
-    }
 }
